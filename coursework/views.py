@@ -11,7 +11,6 @@ from django.contrib import messages
 from django.shortcuts import render
 from django.conf import settings
 from django.urls import reverse
-
 from .models import StudentList, User
 from .utils import generate_token
 import threading
@@ -27,11 +26,12 @@ class EmailThread(threading.Thread):
         self.email = email
         threading.Thread.__init__(self)
 
-    def run(self):
-        self.email.send()
+    # Send email
+    def run(self): self.email.send()
 
 
 def send_activate_email(request, user):
+    # Declare email content
     email = EmailMessage(
         subject="Activate your SEA account",
         body=render_to_string("coursework/activate.html", {
@@ -43,37 +43,36 @@ def send_activate_email(request, user):
         from_email=settings.EMAIL_FROM_USER,
         to=[user.email]
     )
+    # Send email via thread
     EmailThread(email).start()
 
 
 def activate_user(request, uidb64, token):
+    # Try decode user
     try:
         uid = force_str(urlsafe_base64_decode(uidb64))
         user = User.objects.get(pk=uid)
+    # Make non-user if decode fail
     except Exception:
         user = None
+    # User exist & token match
     if user and generate_token.check_token(user, token):
+        # Make email verified, info and redirect user to login page
         user.is_email_verified = True
         user.save()
         messages.success(
-            request,
-            "Email verified, you can now login"
+            request, "Email verified, you can now login"
         )
-        return HttpResponseRedirect(reverse(
-            "login"
-        ))
+        return HttpResponseRedirect(reverse("login"))
+    # User doesn't exist or token doen't match
     else:
-        return HttpResponse(
-            "Something went wrong, please contact teaching assistant."
-        )
+        return HttpResponse("Something went wrong, please contact teaching assistant.")
 
 
 def login_view(request):
     # Prevent login again
     if request.user.is_authenticated:
-        return HttpResponseRedirect(reverse(
-            "index"
-        ))
+        return HttpResponseRedirect(reverse("index"))
     # User submit login form
     if request.method == "POST":
         # Try authenticate user
@@ -85,34 +84,25 @@ def login_view(request):
         # Invalid user
         if user is None:
             messages.error(
-                request,
-                "Invalid student number and/or password."
+                request, "Invalid student number and/or password."
             )
-            return HttpResponseRedirect(reverse(
-                "login"
-            ))
+            return HttpResponseRedirect(reverse("login"))
         # Valid user
         else:
             # Log user in if email verified
             if user.is_email_verified:
                 login(request, user)
                 messages.success(
-                    request,
-                    "Logged in successfully!"
+                    request, "Logged in successfully!"
                 )
-                return HttpResponseRedirect(reverse(
-                    "index"
-                ))
+                return HttpResponseRedirect(reverse("index"))
             # Email haven't verified,remind & send activate email
             else:
                 send_activate_email(request, user)
                 messages.info(
-                    request,
-                    "Email is not verified, please check your mail box."
+                    request, "Email is not verified, please check your mail box."
                 )
-                return HttpResponseRedirect(reverse(
-                    "login"
-                ))
+                return HttpResponseRedirect(reverse("login"))
     # User visit login page
     else:
         return render(request, "coursework/login.html")
@@ -121,46 +111,33 @@ def login_view(request):
 def logout_view(request):
     logout(request)
     messages.success(
-        request,
-        "Logged out successfully!"
+        request, "Logged out successfully!"
     )
-    return HttpResponseRedirect(reverse(
-        "login"
-    ))
+    return HttpResponseRedirect(reverse("login"))
 
 
 def register(request):
     # Prevent resigter when logged in
     if request.user.is_authenticated:
-        return HttpResponseRedirect(reverse(
-            "index"
-        ))
+        return HttpResponseRedirect(reverse("index"))
     # User submit register form
     if request.method == "POST":
         # Student id validation
         student_id = request.POST["student-id"]
         try:
-            student = StudentList.objects.get(
-                student_id=student_id
-            )
+            student = StudentList.objects.get(student_id=student_id)
         except StudentList.DoesNotExist:
             messages.error(
-                request,
-                "Invalid student id!"
+                request, "Invalid student id!"
             )
-            return HttpResponseRedirect(reverse(
-                "register"
-            ))
+            return HttpResponseRedirect(reverse("register"))
         # Ensure password matches confirmation
         password = request.POST["password"]
         if password != request.POST["confirmation"]:
             messages.warning(
-                request,
-                "Passwords must match."
+                request, "Passwords must match."
             )
-            return HttpResponseRedirect(reverse(
-                "register"
-            ))
+            return HttpResponseRedirect(reverse("register"))
         # Try create new user
         try:
             user = User.objects.create_user(
@@ -174,20 +151,14 @@ def register(request):
         # Error if username already taken
         except IntegrityError:
             messages.error(
-                request,
-                "Student id already taken!"
+                request, "Student id already taken!"
             )
-            return HttpResponseRedirect(reverse(
-                "login"
-            ))
+            return HttpResponseRedirect(reverse("login"))
         # Redirect to login page after register successfully
         messages.success(
-            request,
-            "Account created successfully!"
+            request, "Account created successfully!"
         )
-        return HttpResponseRedirect(reverse(
-            "login"
-        ))
+        return HttpResponseRedirect(reverse("login"))
     # User visit register page
     else:
         return render(request, "coursework/register.html")
