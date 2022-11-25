@@ -30,6 +30,8 @@ ALLOWED_HOSTS = []
 
 AUTH_USER_MODEL = "coursework.User"
 
+LOGIN_URL = "login"
+
 # Application definition
 
 INSTALLED_APPS = [
@@ -108,11 +110,20 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Singapore'
 
 USE_I18N = True
 
 USE_TZ = True
+
+
+# EMAIL CONFIG
+EMAIL_FROM_USER = os.environ.get("EMAIL_FROM_USER")
+EMAIL_HOST = "smtp.gmail.com"
+EMAIL_HOST_USER = os.environ.get("EMAIL_FROM_USER")
+EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD")
+EMAIL_USE_TLS = True
+EMAIL_PORT = 587
 
 
 # Static files (CSS, JavaScript, Images)
