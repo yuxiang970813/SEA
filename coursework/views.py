@@ -178,10 +178,15 @@ def create_coursework(request):
                 )
                 new_coursework.save()
                 new_coursework.taken_person.add(request.user)
+                # Redirect to index after create
+                messages.success(
+                    request, "Coursework created successfully"
+                )
+                return HttpResponseRedirect(reverse("index"))
             # Remind if coursework already created
             except IntegrityError:
-                messages.info(
-                    request, "Coursework already created!"
+                messages.warning(
+                    request, "Coursework already exists!"
                 )
                 return HttpResponseRedirect(reverse("create_coursework"))
         # Teacher visit create coursework page

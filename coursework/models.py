@@ -33,9 +33,10 @@ class Course(models.Model):
 
 
 class Coursework(models.Model):
-    course = models.ForeignKey(
+    course = models.OneToOneField(
         Course,
         on_delete=models.PROTECT,
+        unique=True,
         related_name="coursework_name"
     )
     taken_person = models.ManyToManyField(

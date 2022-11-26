@@ -20,11 +20,11 @@
             </div>
             <form action="{% url 'login' %}" class="needs-validation" method="post" novalidate>
               {% csrf_token %}
-              <!-- INPUT STUDETN NUMBER -->
+              <!-- INPUT STUDETN ID -->
               <div class="form-floating mb-3">
                 <input type="number" class="form-control my-4" id="floatingInput" placeholder="Student Number"
                   name="student-id" required autofocus>
-                <label for="floatingInput">Student Number</label>
+                <label for="floatingInput">Student ID</label>
                 <div class="invalid-feedback">
                   Please enter valid student id.
                 </div>
