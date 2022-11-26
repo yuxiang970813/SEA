@@ -23,3 +23,26 @@ class User(AbstractUser):
         default="Student"
     )
     is_email_verified = models.BooleanField(default=False)
+
+
+class Course(models.Model):
+    name = models.CharField(max_length=60)
+
+    def __str__(self):
+        return self.name
+
+
+class Coursework(models.Model):
+    course = models.ForeignKey(
+        Course,
+        on_delete=models.PROTECT,
+        related_name="coursework_name"
+    )
+    taken_person = models.ManyToManyField(
+        User,
+        blank=True,
+        related_name="taken_coursework"
+    )
+
+    def __str__(self):
+        return self.course.name

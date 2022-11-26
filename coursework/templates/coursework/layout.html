@@ -51,7 +51,7 @@
                 <hr class="dropdown-divider">
               </li>
               {% if user.status == "Teacher" %}
-              <li><a class="dropdown-item" href="#">Create Coursework</a></li>
+              <li><a class="dropdown-item" href="{% url 'create_coursework' %}">Create Coursework</a></li>
               {% else %}
               <li><a class="dropdown-item" href="#">Join Coursework</a></li>
               {% endif %}

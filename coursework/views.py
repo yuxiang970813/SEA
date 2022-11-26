@@ -11,7 +11,7 @@ from django.contrib import messages
 from django.shortcuts import render
 from django.conf import settings
 from django.urls import reverse
-from .models import StudentList, User
+from .models import StudentList, User, Course, Coursework
 from .utils import generate_token
 import threading
 
@@ -108,6 +108,7 @@ def login_view(request):
         return render(request, "coursework/login.html")
 
 
+@login_required
 def logout_view(request):
     logout(request)
     messages.success(
@@ -162,3 +163,35 @@ def register(request):
     # User visit register page
     else:
         return render(request, "coursework/register.html")
+
+
+@login_required
+def create_coursework(request):
+    # Only teacher can create coursework
+    if request.user.status == "Teacher":
+        # Teacher submit create coursework form
+        if request.method == "POST":
+            # Try create new coursework & add teacher to that coursework
+            try:
+                new_coursework = Coursework.objects.create(
+                    course=Course.objects.get(pk=request.POST["course-id"])
+                )
+                new_coursework.save()
+                new_coursework.taken_person.add(request.user)
+            # Remind if coursework already created
+            except IntegrityError:
+                messages.info(
+                    request, "Coursework already created!"
+                )
+                return HttpResponseRedirect(reverse("create_coursework"))
+        # Teacher visit create coursework page
+        else:
+            return render(request, "coursework/create_coursework.html", {
+                "courses": Course.objects.all()
+            })
+    # Redirect non-teacher person to index
+    else:
+        messages.error(
+            request, "Only teacher can create coursework"
+        )
+        return HttpResponseRedirect(reverse("index"))
