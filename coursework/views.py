@@ -1,9 +1,9 @@
-from django.utils.encoding import force_str, force_bytes, DjangoUnicodeDecodeError
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.sites.shortcuts import get_current_site
 from django.http import HttpResponseRedirect, HttpResponse
 from django.contrib.auth.decorators import login_required
+from django.utils.encoding import force_str, force_bytes
 from django.template.loader import render_to_string
 from django.core.mail import EmailMessage
 from django.db import IntegrityError
@@ -256,24 +256,6 @@ def coursework_view(request, coursework_id):
 
 
 @login_required
-def assignment_view(request, coursework_id, assignment_id):
-    # For user later
-    coursework = Coursework.objects.get(pk=int(coursework_id))
-    assignment = Assignment.objects.get(pk=int(assignment_id))
-    # Make sure user have join coursework
-    if request.user in coursework.taken_person.all() and assignment.coursework == coursework:
-        return render(request, "coursework/assignment_view.html", {
-            "assignment": assignment
-        })
-    # Remind & redirect to index if user haven't join coursework
-    else:
-        messages.error(
-            request, "Something went wrong!"
-        )
-        return HttpResponseRedirect(reverse("index"))
-
-
-@login_required
 def create_assignment(request, coursework_id):
     # Prevent student create assignment
     if request.user.status == "Student":
@@ -289,8 +271,26 @@ def create_assignment(request, coursework_id):
         # User visit create assignment page
         else:
             return render(request, "coursework/create_assignment.html", {
-                "coursework": Coursework.objects.all()
+                "coursework": Coursework.objects.get(pk=int(coursework_id))
             })
+
+
+@login_required
+def assignment_view(request, coursework_id, assignment_id):
+    # For user later
+    coursework = Coursework.objects.get(pk=int(coursework_id))
+    assignment = Assignment.objects.get(pk=int(assignment_id))
+    # Make sure user have join coursework
+    if request.user in coursework.taken_person.all() and assignment.coursework == coursework:
+        return render(request, "coursework/assignment_view.html", {
+            "assignment": assignment
+        })
+    # Remind & redirect to index if user haven't join coursework
+    else:
+        messages.error(
+            request, "Something went wrong!"
+        )
+        return HttpResponseRedirect(reverse("index"))
 
 
 @login_required

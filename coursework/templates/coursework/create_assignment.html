@@ -17,29 +17,36 @@
                   d="M9.293 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V4.707A1 1 0 0 0 13.707 4L10 .293A1 1 0 0 0 9.293 0zM9.5 3.5v-2l3 3h-2a1 1 0 0 1-1-1zM8.5 7v1.5H10a.5.5 0 0 1 0 1H8.5V11a.5.5 0 0 1-1 0V9.5H6a.5.5 0 0 1 0-1h1.5V7a.5.5 0 0 1 1 0z" />
               </svg>
             </div>
-            <form action="{% url 'login' %}" class="needs-validation" method="post" novalidate>
+            <form action="{% url 'create_assignment' coursework.id %}" class="needs-validation" method="post"
+              novalidate>
               {% csrf_token %}
-              <!-- INPUT STUDETN ID -->
+              <!-- COURSEWORK -->
+              <div class="mb-3">
+                <label for="disabledTextInput" class="form-label"></label>
+                <input type="text" id="disabledTextInput" class="form-control" value="{{ coursework }}" disabled>
+              </div>
+
+              <!-- TITLE -->
               <div class="form-floating mb-3">
-                <input type="number" class="form-control my-4" id="floatingInput" placeholder="Student Number"
-                  name="student-id" required autofocus>
-                <label for="floatingInput">Student ID</label>
+                <input type="text" class="form-control my-4" id="floatingInput" placeholder="Title" name="title"
+                  maxlength="128" required autofocus>
+                <label for="floatingInput">Title</label>
                 <div class="invalid-feedback">
-                  Please enter valid student id.
+                  Invalid title.
                 </div>
               </div>
-              <!-- INPUT PASSWORD -->
-              <div class="form-floating">
-                <input type="password" class="form-control my-4" id="floatingPassword" placeholder="Password"
-                  name="password" required>
-                <label for="floatingPassword">Password</label>
+              <!-- DEADLINE -->
+              <div class="form-floating mb-3">
+                <input type="datetime" class="form-control my-4" id="floatingInput" placeholder="Datetime"
+                  name="datetime" required>
+                <label for="floatingInput">Datetime</label>
                 <div class="invalid-feedback">
-                  Please enter password.
+                  Invalid datetime.
                 </div>
               </div>
-              <!-- LOGIN BUTTON -->
+              <!-- CREATE BUTTON -->
               <div class="text-center mt-3">
-                <button class="btn btn-secondary">Login</button>
+                <button class="btn btn-secondary">Create Assignment</button>
                 <!-- <a href="" class="nav-link">Already have an account?</a> -->
               </div>
             </form>
