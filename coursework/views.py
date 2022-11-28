@@ -11,7 +11,7 @@ from django.contrib import messages
 from django.shortcuts import render
 from django.conf import settings
 from django.urls import reverse
-from .models import StudentList, User, Course, Coursework
+from .models import StudentList, User, Course, Coursework, Assignment, AssigmentStatus
 from .utils import generate_token
 import threading
 
@@ -260,10 +260,11 @@ def coursework_view(request, coursework_id):
 def assignment_view(request, coursework_id, assignment_id):
     # For user later
     coursework = Coursework.objects.get(pk=int(coursework_id))
+    assignment = Assignment.objects.get(pk=int(assignment_id))
     # Make sure user have join coursework
     if request.user in coursework.taken_person.all():
         return render(request, "coursework/assignment_view.html", {
-            ""
+            "assignment": assignment
         })
     # Remind & redirect to index if user haven't join coursework
     else:

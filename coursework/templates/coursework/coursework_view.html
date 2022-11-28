@@ -24,8 +24,8 @@
     </tr>
   </thead>
   <tbody>
+    {% for assignment in coursework.assignment.all %}
     <tr>
-      {% for assignment in coursework.assignment.all %}
       <td>{{ assignment }}</td>
       <td>{{ assignment.created_on }}</td>
       <td>{{ assignment.deadline }}</td>
@@ -47,10 +47,12 @@
           </svg>
         </a>
       </td>
-      {% empty %}
-      <td colspan="5">No assignment at the moment...</td>
-      {% endfor %}
     </tr>
+    {% empty %}
+    <tr>
+      <td colspan="5">No assignment at the moment...</td>
+    </tr>
+    {% endfor %}
   </tbody>
 </table>
 {% endblock %}
