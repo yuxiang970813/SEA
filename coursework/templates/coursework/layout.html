@@ -43,7 +43,7 @@
             </a>
             <ul class="dropdown-menu dropdown-menu-dark">
               {% for coursework_joined in user.coursework_taken.all %}
-              <li><a class="dropdown-item" href="#">{{ coursework_joined.coursework_name }}</a></li>
+              <li><a class="dropdown-item" href="#">{{ coursework_joined.course }}</a></li>
               {% empty %}
               <li><a class="dropdown-item disabled">No Coursework Available</a></li>
               {% endfor %}
@@ -53,7 +53,7 @@
               {% if user.status == "Teacher" %}
               <li><a class="dropdown-item" href="{% url 'create_coursework' %}">Create Coursework</a></li>
               {% else %}
-              <li><a class="dropdown-item" href="#">Join Coursework</a></li>
+              <li><a class="dropdown-item" href="{% url 'join_coursework' %}">Join Coursework</a></li>
               {% endif %}
             </ul>
           </li>

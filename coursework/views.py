@@ -200,3 +200,31 @@ def create_coursework(request):
             request, "Only teacher can create coursework"
         )
         return HttpResponseRedirect(reverse("index"))
+
+
+@login_required
+def join_coursework(request):
+    # User submit join coursework form
+    if request.method == "POST":
+        # For user later
+        user = request.user
+        coursework = Coursework.objects.get(
+            pk=request.POST["coursework-id"]).taken_person
+        # Remind user if already join coursework
+        if user in coursework.all():
+            messages.warning(
+                request, "Already joined coursework!"
+            )
+            return HttpResponseRedirect(reverse("join_coursework"))
+        # Join user to coursework
+        else:
+            coursework.add(user)
+            messages.success(
+                request, "Join coursework successfully"
+            )
+            return HttpResponseRedirect(reverse("index"))
+    # User visit join coursework page
+    else:
+        return render(request, "coursework/join_coursework.html", {
+            "courseworks": Coursework.objects.all()
+        })
