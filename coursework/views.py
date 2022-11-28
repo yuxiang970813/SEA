@@ -182,7 +182,10 @@ def create_coursework(request):
                 messages.success(
                     request, "Coursework created successfully"
                 )
-                return HttpResponseRedirect(reverse("index"))
+                return HttpResponseRedirect(reverse(
+                    "coursework_view",
+                    args=(new_coursework.id,)
+                ))
             # Remind if coursework already created
             except IntegrityError:
                 messages.warning(
@@ -209,22 +212,68 @@ def join_coursework(request):
         # For user later
         user = request.user
         coursework = Coursework.objects.get(
-            pk=request.POST["coursework-id"]).taken_person
+            pk=request.POST["coursework-id"]
+        )
+        taken_person = coursework.taken_person
         # Remind user if already join coursework
-        if user in coursework.all():
+        if user in taken_person.all():
             messages.warning(
                 request, "Already joined coursework!"
             )
             return HttpResponseRedirect(reverse("join_coursework"))
         # Join user to coursework
         else:
-            coursework.add(user)
+            taken_person.add(user)
             messages.success(
                 request, "Join coursework successfully"
             )
-            return HttpResponseRedirect(reverse("index"))
+            print(coursework.id)
+            return HttpResponseRedirect(reverse(
+                "coursework_view",
+                args=(coursework.id,)
+            ))
     # User visit join coursework page
     else:
         return render(request, "coursework/join_coursework.html", {
             "courseworks": Coursework.objects.all()
         })
+
+
+@login_required
+def coursework_view(request, coursework_id):
+    # For user later
+    coursework = Coursework.objects.get(pk=int(coursework_id))
+    # Make sure user have join coursework
+    if request.user in coursework.taken_person.all():
+        return render(request, "coursework/coursework_view.html", {
+            "coursework": coursework
+        })
+    # Remind & redirect to index if user haven't join coursework
+    else:
+        messages.error(
+            request, "You haven't join this coursework!"
+        )
+        return HttpResponseRedirect(reverse("index"))
+
+
+@login_required
+def assignment_view(request, coursework_id, assignment_id):
+    # For user later
+    coursework = Coursework.objects.get(pk=int(coursework_id))
+    # Make sure user have join coursework
+    if request.user in coursework.taken_person.all():
+        return render(request, "coursework/assignment_view.html", {
+            ""
+        })
+    # Remind & redirect to index if user haven't join coursework
+    else:
+        messages.error(
+            request, "You haven't join this coursework!"
+        )
+        return HttpResponseRedirect(reverse("index"))
+
+
+@login_required
+def upload_file(request):
+    # TODO
+    pass

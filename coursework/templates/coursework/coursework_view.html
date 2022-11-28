@@ -1,0 +1,56 @@
+{% extends "coursework/layout.html" %}
+
+{% block title %}{{ coursework }}{% endblock %}
+
+{% block body %}
+<h1>
+  <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" fill="currentColor" class="bi bi-journals"
+    viewBox="0 0 16 16">
+    <path
+      d="M5 0h8a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2 2 2 0 0 1-2 2H3a2 2 0 0 1-2-2h1a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V4a1 1 0 0 0-1-1H3a1 1 0 0 0-1 1H1a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v9a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H5a1 1 0 0 0-1 1H3a2 2 0 0 1 2-2z" />
+    <path
+      d="M1 6v-.5a.5.5 0 0 1 1 0V6h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1H1zm0 3v-.5a.5.5 0 0 1 1 0V9h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1H1zm0 2.5v.5H.5a.5.5 0 0 0 0 1h2a.5.5 0 0 0 0-1H2v-.5a.5.5 0 0 0-1 0z" />
+  </svg>
+  {{ coursework }}
+</h1>
+<table class="table table-dark table-hover">
+  <thead>
+    <tr>
+      <th scope="col">Assignment Title</th>
+      <th scope="col">Created on</th>
+      <th scope="col">Deadline</th>
+      <th scope="col">Status</th>
+      <th scope="col">Action</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      {% for assignment in coursework.assignment.all %}
+      <td>{{ assignment }}</td>
+      <td>{{ assignment.created_on }}</td>
+      <td>{{ assignment.deadline }}</td>
+      <td>
+        {% if not assignment.status.upload_status %}
+        False
+        {% else %}
+        True
+        {% endif %}
+      </td>
+      <td>
+        <a href="{% url 'assignment_view' coursework.id assignment.id %}">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+            class="bi bi-box-arrow-right" viewBox="0 0 16 16">
+            <path fill-rule="evenodd"
+              d="M10 12.5a.5.5 0 0 1-.5.5h-8a.5.5 0 0 1-.5-.5v-9a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v2a.5.5 0 0 0 1 0v-2A1.5 1.5 0 0 0 9.5 2h-8A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h8a1.5 1.5 0 0 0 1.5-1.5v-2a.5.5 0 0 0-1 0v2z" />
+            <path fill-rule="evenodd"
+              d="M15.854 8.354a.5.5 0 0 0 0-.708l-3-3a.5.5 0 0 0-.708.708L14.293 7.5H5.5a.5.5 0 0 0 0 1h8.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3z" />
+          </svg>
+        </a>
+      </td>
+      {% empty %}
+      <td colspan="5">No assignment at the moment...</td>
+      {% endfor %}
+    </tr>
+  </tbody>
+</table>
+{% endblock %}

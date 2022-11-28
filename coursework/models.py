@@ -47,3 +47,36 @@ class Coursework(models.Model):
 
     def __str__(self):
         return self.course.name
+
+
+class Assignment(models.Model):
+    coursework = models.ForeignKey(
+        Coursework,
+        on_delete=models.PROTECT,
+        related_name="assignment"
+    )
+    title = models.CharField(max_length=128)
+    created_on = models.DateTimeField(auto_now_add=True)
+    deadline = models.DateTimeField()
+
+    def __str__(self):
+        return self.title
+
+
+class AssigmentStatus(models.Model):
+    assignment = models.ForeignKey(
+        Assignment,
+        on_delete=models.PROTECT,
+        related_name="status"
+    )
+    student = models.ForeignKey(
+        User,
+        on_delete=models.PROTECT,
+        related_name="assignment_student"
+    )
+    memo = models.TextField(
+        blank=True,
+        null=True
+    )
+    upload_file = models.FileField(null=True)
+    upload_status = models.BooleanField(default=False)

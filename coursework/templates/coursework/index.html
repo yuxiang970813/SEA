@@ -1,5 +1,31 @@
 {% extends "coursework/layout.html" %}
 
 {% block body %}
-INDEX
+<table>
+  <thead>
+    <tr>
+      <th>Assignment title</th>
+      <th>Course</th>
+      <th>Deadline</th>
+      <th>Action</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for coursework in user.coursework_taken.all %}
+    <tr>
+      <td>A</td>
+      <td>B</td>
+      <td>C</td>
+      <td>D</td>
+    </tr>
+    {% empty %}
+    <tr>
+      <td>-</td>
+      <td>-</td>
+      <td>-</td>
+      <td>-</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
 {% endblock %}
