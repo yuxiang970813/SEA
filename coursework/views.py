@@ -227,7 +227,6 @@ def join_coursework(request):
             messages.success(
                 request, "Join coursework successfully"
             )
-            print(coursework.id)
             return HttpResponseRedirect(reverse(
                 "coursework_view",
                 args=(coursework.id,)
@@ -262,14 +261,14 @@ def assignment_view(request, coursework_id, assignment_id):
     coursework = Coursework.objects.get(pk=int(coursework_id))
     assignment = Assignment.objects.get(pk=int(assignment_id))
     # Make sure user have join coursework
-    if request.user in coursework.taken_person.all():
+    if request.user in coursework.taken_person.all() and assignment.coursework == coursework:
         return render(request, "coursework/assignment_view.html", {
             "assignment": assignment
         })
     # Remind & redirect to index if user haven't join coursework
     else:
         messages.error(
-            request, "You haven't join this coursework!"
+            request, "Something went wrong!"
         )
         return HttpResponseRedirect(reverse("index"))
 

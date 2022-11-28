@@ -48,6 +48,9 @@ class Coursework(models.Model):
     def __str__(self):
         return self.course.name
 
+    class Meta:
+        ordering = ["course"]
+
 
 class Assignment(models.Model):
     coursework = models.ForeignKey(
