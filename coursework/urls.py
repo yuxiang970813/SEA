@@ -14,5 +14,7 @@ urlpatterns = [
          views.coursework_view, name="coursework_view"),
     path("coursework/<int:coursework_id>/assignment/<int:assignment_id>",
          views.assignment_view, name="assignment_view"),
+    path("assignment/<int:coursework_id>/create",
+         views.create_assignment, name="create_assignment"),
     path("upload", views.upload_file, name="upload_file")
 ]

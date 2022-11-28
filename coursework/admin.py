@@ -25,9 +25,18 @@ class StudentListAdmin(admin.ModelAdmin):
     search_fields = display
 
 
+class AssignmentAdmin(admin.ModelAdmin):
+    list_display = (
+        "coursework",
+        "title",
+        "created_on",
+        "deadline"
+    )
+
+
 admin.site.register(StudentList, StudentListAdmin)
 admin.site.register(User, UserDisplay)
 admin.site.register(Course)
 admin.site.register(Coursework)
-admin.site.register(Assignment)
+admin.site.register(Assignment, AssignmentAdmin)
 admin.site.register(AssigmentStatus)

@@ -274,6 +274,26 @@ def assignment_view(request, coursework_id, assignment_id):
 
 
 @login_required
+def create_assignment(request, coursework_id):
+    # Prevent student create assignment
+    if request.user.status == "Student":
+        messages.error(
+            request, "You cannot create assignment!"
+        )
+        return HttpResponseRedirect(reverse("index"))
+    # Only teacher & assistant can create assignment
+    else:
+        # User submit create assignment form
+        if request.method == "POST":
+            return
+        # User visit create assignment page
+        else:
+            return render(request, "coursework/create_assignment.html", {
+                "coursework": Coursework.objects.all()
+            })
+
+
+@login_required
 def upload_file(request):
     # TODO
     pass

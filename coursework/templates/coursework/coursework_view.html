@@ -56,7 +56,7 @@
     <tr>
       <td colspan="5" style="text-align:center">
         {% if not user.status == "Student" %}
-        <a href="">Create assignment</a>
+        <a href="{% url 'create_assignment' coursework.id %}">Create assignment</a>
         {% else %}
         Bla bla bla
         {% endif %}

@@ -31,6 +31,9 @@ class Course(models.Model):
     def __str__(self):
         return self.name
 
+    class Meta:
+        ordering = ["name"]
+
 
 class Coursework(models.Model):
     course = models.OneToOneField(
@@ -59,7 +62,7 @@ class Assignment(models.Model):
         related_name="assignment"
     )
     title = models.CharField(max_length=128)
-    created_on = models.DateTimeField(auto_now_add=True)
+    created_on = models.DateField(auto_now_add=True)
     deadline = models.DateTimeField()
 
     def __str__(self):
