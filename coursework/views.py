@@ -18,7 +18,9 @@ import threading
 
 @login_required
 def index(request):
-    return render(request, "coursework/index.html")
+    return render(request, "coursework/index.html", {
+        "assignments": Assignment.objects.filter(coursework__taken_person=request.user)
+    })
 
 
 class EmailThread(threading.Thread):

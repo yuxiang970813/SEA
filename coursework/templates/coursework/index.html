@@ -19,25 +19,29 @@
       <th scope="col">Assignment</th>
       <th scope="col">Created</th>
       <th scope="col">Deadline</th>
-      <th scope="col">Status</th>
-      <th scope="col">Action</th>
+      <th scope="col" class="text-center">Status</th>
+      <th scope="col" class="text-center">Action</th>
     </tr>
   </thead>
   <tbody>
-    {% for assignment in coursework.assignment.all %}
+    {% for assignment in assignments %}
     <tr>
       <td>{{ assignment }}</td>
       <td>{{ assignment.created_on|date:'n/d D' }}</td>
       <td>{{ assignment.deadline|date:'n/d D G:i' }}</td>
-      <td>
+      <td class="text-center">
         {% if not assignment.status.upload_status %}
-        False
+        <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="currentColor" class="bi bi-x-circle-fill"
+          viewBox="0 0 16 16">
+          <path
+            d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM5.354 4.646a.5.5 0 1 0-.708.708L7.293 8l-2.647 2.646a.5.5 0 0 0 .708.708L8 8.707l2.646 2.647a.5.5 0 0 0 .708-.708L8.707 8l2.647-2.646a.5.5 0 0 0-.708-.708L8 7.293 5.354 4.646z" />
+        </svg>
         {% else %}
         True
         {% endif %}
       </td>
-      <td>
-        <a href="{% url 'assignment_view' coursework.id assignment.id %}">
+      <td class="text-center">
+        <a href="{% url 'assignment_view' assignment.coursework.id assignment.id %}">
           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
             class="bi bi-box-arrow-right" viewBox="0 0 16 16">
             <path fill-rule="evenodd"
