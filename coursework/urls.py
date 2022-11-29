@@ -1,3 +1,5 @@
+from django.conf.urls.static import static
+from django.conf import settings
 from django.urls import path
 from . import views
 
@@ -15,6 +17,11 @@ urlpatterns = [
     path("coursework/<int:coursework_id>/assignment/create",
          views.create_assignment, name="create_assignment"),
     path("coursework/<int:coursework_id>/assignment/<int:assignment_id>",
-         views.assignment_view, name="assignment_view"),
-    path("upload", views.upload_file, name="upload_file")
+         views.assignment_view, name="assignment_view")
 ]
+
+if settings.DEBUG:
+    urlpatterns += static(
+        settings.MEDIA_URL,
+        document_root=settings.MEDIA_ROOT
+    )

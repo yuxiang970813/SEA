@@ -4,6 +4,7 @@ from django.contrib.sites.shortcuts import get_current_site
 from django.http import HttpResponseRedirect, HttpResponse
 from django.contrib.auth.decorators import login_required
 from django.utils.encoding import force_str, force_bytes
+from django.core.files.storage import FileSystemStorage
 from django.template.loader import render_to_string
 from django.core.mail import EmailMessage
 from django.db import IntegrityError
@@ -301,18 +302,22 @@ def assignment_view(request, coursework_id, assignment_id):
     assignment = Assignment.objects.get(pk=int(assignment_id))
     # Make sure user have join coursework
     if request.user in coursework.taken_person.all() and assignment.coursework == coursework:
-        return render(request, "coursework/assignment_view.html", {
-            "assignment": assignment
-        })
+        # User submit assignment form
+        if request.method == "POST":
+            student = request.user
+            memo = request.POST["memo"]
+            file = request.FILES["upload-file"]
+            file_storage = FileSystemStorage()
+            file_save = file_storage.save(f"{request.user}.ptx", file)
+            url = file_storage.url(file_save)
+        # User visit submit assignment page
+        else:
+            return render(request, "coursework/assignment_view.html", {
+                "assignment": assignment
+            })
     # Remind & redirect to index if user haven't join coursework
     else:
         messages.error(
             request, "Something went wrong!"
         )
         return HttpResponseRedirect(reverse("index"))
-
-
-@login_required
-def upload_file(request):
-    # TODO
-    pass
