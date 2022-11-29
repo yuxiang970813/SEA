@@ -1,3 +1,4 @@
+// Bootstrap cliemt side validation script
 (function () {
     'use strict';
     // Fetch all the forms we want to apply custom Bootstrap validation styles to
@@ -18,6 +19,9 @@
     });
 })();
 
-
-// Datetime picker
-
+// Disable past datetime
+document.getElementsByName('datetime')[0].min = new Date(
+    Date.now() - new Date().getTimezoneOffset() * 60000
+)
+    .toISOString()
+    .slice(0, 16);

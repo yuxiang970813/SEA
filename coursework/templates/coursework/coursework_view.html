@@ -27,8 +27,8 @@
     {% for assignment in coursework.assignment.all %}
     <tr>
       <td>{{ assignment }}</td>
-      <td>{{ assignment.created_on }}</td>
-      <td>{{ assignment.deadline }}</td>
+      <td>{{ assignment.created_on|date:'n/d D' }}</td>
+      <td>{{ assignment.deadline|date:'n/d D G:i' }}</td>
       <td>
         {% if not assignment.status.upload_status %}
         False

@@ -62,11 +62,14 @@ class Assignment(models.Model):
         related_name="assignment"
     )
     title = models.CharField(max_length=128)
-    created_on = models.DateField(auto_now_add=True)
+    created_on = models.DateTimeField(auto_now_add=True)
     deadline = models.DateTimeField()
 
     def __str__(self):
         return self.title
+
+    class Meta:
+        ordering = ["-created_on"]
 
 
 class AssigmentStatus(models.Model):

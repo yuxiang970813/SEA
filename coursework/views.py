@@ -267,7 +267,24 @@ def create_assignment(request, coursework_id):
     else:
         # User submit create assignment form
         if request.method == "POST":
-            return
+            try:
+                new_assignment = Assignment.objects.create(
+                    coursework=Coursework.objects.get(pk=coursework_id),
+                    title=request.POST["title"],
+                    deadline=request.POST["datetime"]
+                )
+                new_assignment.save()
+                messages.success(
+                    request, "Assignment created successfully!"
+                )
+            except:
+                messages.error(
+                    request, "Failure to create assignment, please try again!"
+                )
+            return HttpResponseRedirect(reverse(
+                "coursework_view",
+                args=(coursework_id,)
+            ))
         # User visit create assignment page
         else:
             return render(request, "coursework/create_assignment.html", {
