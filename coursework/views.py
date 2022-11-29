@@ -154,7 +154,7 @@ def register(request):
             messages.error(
                 request, "Student id already taken!"
             )
-            return HttpResponseRedirect(reverse("login"))
+            return HttpResponseRedirect(reverse("register"))
         # Redirect to login page after register successfully
         messages.success(
             request, "Account created successfully!"
