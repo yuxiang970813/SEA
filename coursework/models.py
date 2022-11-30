@@ -1,5 +1,6 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
+import os
 
 
 class StudentList(models.Model):
@@ -72,6 +73,14 @@ class Assignment(models.Model):
         ordering = ["-created_on"]
 
 
+def path_and_rename(path):
+    def wrapper(instance, filename):
+        file_format = filename.split(".")[-1]
+        filename = "{}.{}".format(instance, file_format)
+        return os.path.join(path, filename)
+    return wrapper
+
+
 class AssigmentStatus(models.Model):
     assignment = models.ForeignKey(
         Assignment,
@@ -87,5 +96,8 @@ class AssigmentStatus(models.Model):
         blank=True,
         null=True
     )
-    upload_file = models.FileField(null=True)
+    upload_file = models.FileField(
+        null=True,
+        upload_to=path_and_rename("")
+    )
     upload_status = models.BooleanField(default=False)
