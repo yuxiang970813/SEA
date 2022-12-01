@@ -46,7 +46,7 @@
       </td>
       <td class="text-center">
         {% if assignment.status.all %}
-        <a href="">
+        <a href="{% url 'edit_assignment' coursework.id assignment.id %}">
           <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" fill="currentColor" class="bi bi-pencil-square"
             viewBox="0 0 16 16">
             <path
