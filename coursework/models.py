@@ -70,18 +70,7 @@ class Assignment(models.Model):
         return self.title
 
     class Meta:
-        ordering = ["-created_on"]
-
-
-def path_and_rename(instance, filename):
-    file_format = filename.split(".")[-1]
-    filename = "{assignment_name}_{date}_{student_id}.{file_format}".format(
-        assignment_name=instance.assignment,
-        date=instance.assignment.deadline.strftime("%Y%m%m"),
-        student_id=instance.student.username,
-        file_format=file_format
-    )
-    return os.path.join("upload", filename)
+        ordering = ["coursework", "-created_on"]
 
 
 class AssigmentStatus(models.Model):
@@ -99,14 +88,29 @@ class AssigmentStatus(models.Model):
         blank=True,
         null=True
     )
-    upload_file = models.FileField(
-        null=True,
-        upload_to=path_and_rename
-    )
-    upload_status = models.BooleanField(default=False)
 
     def __str__(self):
-        if self.upload_status:
-            return f"{self.student} has upload {self.assignment}"
-        else:
-            return f"{self.student} hasn't upload {self.assignment}"
+        return f"{self.student} upload {self.assignment}"
+
+
+def path_and_rename(instance, filename):
+    file_format = filename.split(".")[-1]
+    filename = "{assignment_name}_{date}_{student_id}.{file_format}".format(
+        assignment_name=instance.assignment.assignment,
+        date=instance.assignment.assignment.deadline.strftime("%Y%m%m"),
+        student_id=instance.assignment.student.username,
+        file_format=file_format
+    )
+    return os.path.join("upload", filename)
+
+
+class UploadFile(models.Model):
+    assignment = models.ForeignKey(
+        AssigmentStatus,
+        on_delete=models.CASCADE,
+        related_name="upload_file"
+    )
+    file = models.FileField(upload_to=path_and_rename)
+
+    def __str__(self):
+        return f"{self.assignment}({self.file})"

@@ -12,7 +12,7 @@ from django.contrib import messages
 from django.shortcuts import render
 from django.conf import settings
 from django.urls import reverse
-from .models import StudentList, User, Course, Coursework, Assignment, AssigmentStatus
+from .models import StudentList, User, Course, Coursework, Assignment, AssigmentStatus, UploadFile
 from .utils import generate_token
 import threading
 
@@ -308,12 +308,17 @@ def assignment_view(request, coursework_id, assignment_id):
             upload_assignment = AssigmentStatus.objects.create(
                 assignment=Assignment.objects.get(pk=assignment_id),
                 student=request.user,
-                memo=request.POST["memo"],
-                upload_file=request.FILES["upload-file"],
-                upload_status=True
+                memo=request.POST["memo"]
             )
             upload_assignment.save()
-            # Info user and redirect to index
+            #
+            files = request.FILES.getlist("upload-file")
+            for file in files:
+                UploadFile.objects.create(
+                    assignment=upload_assignment,
+                    file=file
+                ).save()
+                # Info user and redirect to index
             messages.success(
                 request, "Assignment upload successfully!"
             )
