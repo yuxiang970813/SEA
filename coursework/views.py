@@ -304,12 +304,20 @@ def assignment_view(request, coursework_id, assignment_id):
     if request.user in coursework.taken_person.all() and assignment.coursework == coursework:
         # User submit assignment form
         if request.method == "POST":
-            student = request.user
-            memo = request.POST["memo"]
-            file = request.FILES["upload-file"]
-            file_storage = FileSystemStorage()
-            file_save = file_storage.save(f"{request.user}.ptx", file)
-            url = file_storage.url(file_save)
+            # Upload assigment
+            upload_assignment = AssigmentStatus.objects.create(
+                assignment=Assignment.objects.get(pk=assignment_id),
+                student=request.user,
+                memo=request.POST["memo"],
+                upload_file=request.FILES["upload-file"],
+                upload_status=True
+            )
+            upload_assignment.save()
+            # Info user and redirect to index
+            messages.success(
+                request, "Assignment upload successfully!"
+            )
+            return HttpResponseRedirect(reverse("index"))
         # User visit submit assignment page
         else:
             return render(request, "coursework/assignment_view.html", {

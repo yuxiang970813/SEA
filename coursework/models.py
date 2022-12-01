@@ -73,12 +73,15 @@ class Assignment(models.Model):
         ordering = ["-created_on"]
 
 
-def path_and_rename(path):
-    def wrapper(instance, filename):
-        file_format = filename.split(".")[-1]
-        filename = "{}.{}".format(instance, file_format)
-        return os.path.join(path, filename)
-    return wrapper
+def path_and_rename(instance, filename):
+    file_format = filename.split(".")[-1]
+    filename = "{assignment_name}_{date}_{student_id}.{file_format}".format(
+        assignment_name=instance.assignment,
+        date=instance.assignment.deadline.strftime("%Y%m%m"),
+        student_id=instance.student.username,
+        file_format=file_format
+    )
+    return os.path.join("upload", filename)
 
 
 class AssigmentStatus(models.Model):
@@ -98,6 +101,12 @@ class AssigmentStatus(models.Model):
     )
     upload_file = models.FileField(
         null=True,
-        upload_to=path_and_rename("")
+        upload_to=path_and_rename
     )
     upload_status = models.BooleanField(default=False)
+
+    def __str__(self):
+        if self.upload_status:
+            return f"{self.student} has upload {self.assignment}"
+        else:
+            return f"{self.student} hasn't upload {self.assignment}"
