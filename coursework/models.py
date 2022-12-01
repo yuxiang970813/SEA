@@ -95,13 +95,14 @@ class AssigmentStatus(models.Model):
 
 def path_and_rename(instance, filename):
     file_format = filename.split(".")[-1]
-    filename = "{assignment_name}_{date}_{student_id}.{file_format}".format(
+    filename = "{coursework_name}_{assignment_name}_{date}_{student_id}.{file_format}".format(
+        coursework_name=instance.assignment.assignment.coursework,
         assignment_name=instance.assignment.assignment,
         date=instance.assignment.assignment.deadline.strftime("%Y%m%m"),
         student_id=instance.assignment.student.username,
         file_format=file_format
     )
-    return os.path.join("upload", filename)
+    return os.path.join("", filename)
 
 
 class UploadFile(models.Model):

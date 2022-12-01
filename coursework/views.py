@@ -296,6 +296,7 @@ def create_assignment(request, coursework_id):
 
 
 def user_in_coursework(user, coursework_id, assignment):
+    """user & assignment must be model object"""
     # For use later
     coursework = Coursework.objects.get(pk=int(coursework_id))
     if user in coursework.taken_person.all() and assignment.coursework == coursework:
