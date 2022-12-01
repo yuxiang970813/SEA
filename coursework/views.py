@@ -295,23 +295,31 @@ def create_assignment(request, coursework_id):
             })
 
 
-@login_required
-def assignment_view(request, coursework_id, assignment_id):
-    # For user later
+def user_in_coursework(user, coursework_id, assignment_id):
+    # For use later
     coursework = Coursework.objects.get(pk=int(coursework_id))
     assignment = Assignment.objects.get(pk=int(assignment_id))
+    if user in coursework.taken_person.all() and assignment.coursework == coursework:
+        return True
+    else:
+        return False
+
+
+@login_required
+def assignment_view(request, coursework_id, assignment_id):
+    user = request.user
     # Make sure user have join coursework
-    if request.user in coursework.taken_person.all() and assignment.coursework == coursework:
+    if user_in_coursework(user, coursework_id, assignment_id):
         # User submit assignment form
         if request.method == "POST":
-            # Upload assigment
+            # Create upload assigment status
             upload_assignment = AssigmentStatus.objects.create(
                 assignment=Assignment.objects.get(pk=assignment_id),
-                student=request.user,
+                student=user,
                 memo=request.POST["memo"]
             )
             upload_assignment.save()
-            #
+            # Upload file
             files = request.FILES.getlist("upload-file")
             for file in files:
                 UploadFile.objects.create(
@@ -326,7 +334,7 @@ def assignment_view(request, coursework_id, assignment_id):
         # User visit submit assignment page
         else:
             return render(request, "coursework/assignment_view.html", {
-                "assignment": assignment
+                "assignment": Assignment.objects.get(pk=int(assignment_id))
             })
     # Remind & redirect to index if user haven't join coursework
     else:
@@ -334,3 +342,26 @@ def assignment_view(request, coursework_id, assignment_id):
             request, "Something went wrong!"
         )
         return HttpResponseRedirect(reverse("index"))
+
+
+@login_required
+def edit_assignment(request, coursework_id, assignment_id):
+    # Make sure user have join coursework
+    if user_in_coursework(request.user, coursework_id, assignment_id):
+        return
+    # Remind & redirect to index if user haven't join coursework
+    else:
+        messages.error(
+            request, "Something went wrong!"
+        )
+        return HttpResponseRedirect(reverse("index"))
+
+    # # User submit edit assignment form
+    # if request.method == "POST":
+    #     # TODO
+    #     return
+    # # User visit edit assigment page
+    # else:
+    #     return render(request, "coursework/edit_assignment.html", {
+    #         # TODO
+    #     })
