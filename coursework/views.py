@@ -347,25 +347,30 @@ def assignment_view(request, coursework_id, assignment_id):
 
 
 @login_required
-def edit_assignment(request, coursework_id, assignment_id):
+def edit_memo(request, coursework_id, assignment_id):
     # For user later
     user = request.user
     assignment = Assignment.objects.get(pk=int(assignment_id))
     # Make sure user have join coursework
     if user_in_coursework(user, coursework_id, assignment):
+        # For user later
+        assigment_status = AssigmentStatus.objects.get(
+            assignment=assignment,
+            student=user
+        )
         # User submit edit assignment form
         if request.method == "POST":
-            return
+            # Update new version memo & redirect to index
+            assigment_status.memo = request.POST["memo"]
+            assigment_status.save()
+            messages.success(
+                request, "Memo edit successfully!"
+            )
+            return HttpResponseRedirect(reverse("index"))
         # User visit edit assignment page
         else:
-            assigment_status = AssigmentStatus.objects.get(
-                assignment=assignment,
-                student=user
-            )
             return render(request, "coursework/edit_assignment.html", {
-                "assignment": assignment,
-                "assigment_status": assigment_status,
-                "upload_file": UploadFile.objects.filter(assignment=assigment_status)
+                "assigment_status": assigment_status
             })
     # Remind & redirect to index if user haven't join coursework
     else:
