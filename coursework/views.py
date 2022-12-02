@@ -14,7 +14,7 @@ from django.contrib import messages
 from django.shortcuts import render
 from django.conf import settings
 from django.urls import reverse
-from .models import StudentList, User, Course, Coursework, Assignment, AssigmentStatus, UploadFile
+from .models import StudentList, User, Course, Coursework, Assignment, AssignmentStatus, UploadFile
 from .utils import generate_token
 import threading
 import json
@@ -317,8 +317,8 @@ def assignment_view(request, coursework_id, assignment_id):
     if user_in_coursework(user, coursework_id, assignment):
         # User submit assignment form
         if request.method == "POST":
-            # Create upload assigment status
-            upload_assignment = AssigmentStatus.objects.create(
+            # Create upload assignment status
+            upload_assignment = AssignmentStatus.objects.create(
                 assignment=assignment,
                 student=user,
                 memo=request.POST["memo"]
@@ -357,15 +357,15 @@ def edit_memo(request, coursework_id, assignment_id):
     # Make sure user have join coursework
     if user_in_coursework(user, coursework_id, assignment):
         # For user later
-        assigment_status = AssigmentStatus.objects.get(
+        assignment_status = AssignmentStatus.objects.get(
             assignment=assignment,
             student=user
         )
         # User submit edit assignment form
         if request.method == "POST":
             # Update new version memo & redirect to index
-            assigment_status.memo = request.POST["memo"]
-            assigment_status.save()
+            assignment_status.memo = request.POST["memo"]
+            assignment_status.save()
             messages.success(
                 request, "Memo edit successfully!"
             )
@@ -373,7 +373,7 @@ def edit_memo(request, coursework_id, assignment_id):
         # User visit edit assignment page
         else:
             return render(request, "coursework/edit_assignment.html", {
-                "assigment_status": assigment_status
+                "assignment_status": assignment_status
             })
     # Remind & redirect to index if user haven't join coursework
     else:
@@ -391,18 +391,15 @@ def manage_file(request, coursework_id, assignment_id):
     # Make sure user have join coursework
     if user_in_coursework(user, coursework_id, assignment):
         # For user later
-        assigment_status = AssigmentStatus.objects.get(
+        assignment_status = AssignmentStatus.objects.get(
             assignment=assignment,
             student=user
         )
-        # User submit manage file form
-        if request.method == "POST":
-            return
         # User visit manage file page
-        else:
+        if request.method == "GET":
             return render(request, "coursework/manage_file.html", {
-                "assigment_status": assigment_status,
-                "upload_file": UploadFile.objects.filter(assignment=assigment_status)
+                "assignment_status": assignment_status,
+                "upload_file": UploadFile.objects.filter(assignment=assignment_status)
             })
     # Remind & redirect to index if user haven't join coursework
     else:
@@ -443,3 +440,45 @@ def delete_file(request):
             {"error": "Delete failed!"},
             status=400
         )
+
+
+@login_required
+def upload_file(request, coursework_id, assignment_id):
+    # For user later
+    user = request.user
+    assignment = Assignment.objects.get(pk=int(assignment_id))
+    # Make sure user have join coursework
+    if user_in_coursework(user, coursework_id, assignment):
+        # User upload file
+        if request.method == "POST":
+            assignment_status = AssignmentStatus.objects.get(
+                assignment=assignment,
+                student=user
+            )
+            # Upload file
+            UploadFile.objects.create(
+                assignment=assignment_status,
+                file=request.FILES["file-for-upload"]
+            ).save()
+            messages.success(
+                request, "Upload successfully"
+            )
+            return HttpResponseRedirect(reverse(
+                "manage_file",
+                args=(
+                    coursework_id,
+                    assignment_id
+                )
+            ))
+        # Upload must be post request!
+        else:
+            messages.error(
+                request, "POST request required!"
+            )
+            return HttpResponseRedirect(reverse("index"))
+    # Remind & redirect to index if user haven't join coursework
+    else:
+        messages.error(
+            request, "Something went wrong!"
+        )
+        return HttpResponseRedirect(reverse("index"))

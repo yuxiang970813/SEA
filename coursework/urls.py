@@ -22,6 +22,8 @@ urlpatterns = [
          views.edit_memo, name="edit_memo"),
     path("coursework/<int:coursework_id>/assignment/<int:assignment_id>/manage",
          views.manage_file, name="manage_file"),
+    path("coursework/<int:coursework_id>/assignment/<int:assignment_id>/upload",
+         views.upload_file, name="upload_file"),
     # API Routes
     path("delete/file", views.delete_file, name="delete_file")
 ]

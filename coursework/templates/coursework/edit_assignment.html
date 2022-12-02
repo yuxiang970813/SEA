@@ -22,19 +22,19 @@
               </svg>
             </div>
             <form
-              action="{% url 'edit_memo' assigment_status.assignment.coursework.id assigment_status.assignment.id %}"
+              action="{% url 'edit_memo' assignment_status.assignment.coursework.id assignment_status.assignment.id %}"
               method="post">
               {% csrf_token %}
               <!-- ASSIGNMENT -->
               <div class="mb-3">
                 <label for="disabledTextInput" class="form-label"></label>
-                <input type="text" id="disabledTextInput" class="form-control" value="{{ assigment_status.assignment }}"
+                <input type="text" id="disabledTextInput" class="form-control" value="{{ assignment_status.assignment }}"
                   disabled>
               </div>
               <!-- MEMO -->
               <div class="form-floating mb-3">
                 <textarea class="form-control" id="floatingTextarea2" name="memo" style="height: 100px; resize: none"
-                  placeholder="Memo" autofocus>{{ assigment_status.memo }}</textarea>
+                  placeholder="Memo" autofocus>{{ assignment_status.memo }}</textarea>
                 <label for="floatingTextarea2">Memo</label>
               </div>
               <!-- EDIT BUTTON -->

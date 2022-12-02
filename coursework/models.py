@@ -73,7 +73,7 @@ class Assignment(models.Model):
         ordering = ["coursework", "-created_on"]
 
 
-class AssigmentStatus(models.Model):
+class AssignmentStatus(models.Model):
     assignment = models.ForeignKey(
         Assignment,
         on_delete=models.PROTECT,
@@ -107,7 +107,7 @@ def path_and_rename(instance, filename):
 
 class UploadFile(models.Model):
     assignment = models.ForeignKey(
-        AssigmentStatus,
+        AssignmentStatus,
         on_delete=models.CASCADE,
         related_name="upload_file"
     )

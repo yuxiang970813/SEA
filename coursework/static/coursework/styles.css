@@ -10,6 +10,9 @@ th:last-child {
 tr:last-child td:first-child {
     border-bottom-left-radius: 1rem;
 }
-tr:last-child td:last-child{
+tr:last-child td:last-child {
     border-bottom-right-radius: 1rem;
+}
+#label-upload:hover {
+    cursor: pointer;
 }

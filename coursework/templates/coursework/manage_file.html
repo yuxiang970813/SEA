@@ -21,49 +21,55 @@
                   d="M1 5v-.5a.5.5 0 0 1 1 0V5h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1H1zm0 3v-.5a.5.5 0 0 1 1 0V8h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1H1zm0 3v-.5a.5.5 0 0 1 1 0v.5h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1H1z" />
               </svg>
             </div>
-            <form action="" class="needs-validation" method="post" novalidate>
-              {% csrf_token %}
-              <!-- ASSIGNMENT -->
-              <div class="mb-3">
-                <label for="disabledTextInput" class="form-label"></label>
-                <input type="text" id="disabledTextInput" class="form-control" value="{{ assigment_status.assignment }}"
-                  disabled>
-              </div>
-              <!-- UPLOADED FILE(S) -->
-              <div class="mb-3 overflow-auto">
-                <table class="table table-sm">
-                  <thead>
-                    <tr>
-                      <th scope="col" colspan="2">Uploaded File(s)</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {% for file in upload_file.all %}
-                    <tr id="uploaded-file-{{ file.id }}">
-                      <td>
-                        <a href="{{ file.file.url }}" class="text-decoration-none">
-                          {{ file.file }}
-                        </a>
-                      </td>
-                      <td class=" text-center">
-                        <a class="btn btn-danger btn-sm" onclick="deleteFile('{{ file.id }}', '{{ file.file }}')">
-                          Delete
-                        </a>
-                      </td>
-                    </tr>
-                    {% endfor %}
-                  </tbody>
-                </table>
-              </div>
-              <!-- MANAGE BUTTON -->
-              <div class="text-center mt-3">
-                <button class="btn btn-secondary">Complete Manage</button>
-              </div>
-            </form>
+            <!-- ASSIGNMENT -->
+            <div class="mb-3">
+              <label for="disabledTextInput" class="form-label"></label>
+              <input type="text" id="disabledTextInput" class="form-control" value="{{ assignment_status.assignment }}"
+                disabled>
+            </div>
+            <!-- UPLOADED FILE(S) -->
+            <div class="mb-3 overflow-auto">
+              <table class="table table-sm">
+                <thead>
+                  <tr>
+                    <th scope="col" colspan="2">Uploaded File(s)</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for file in upload_file.all %}
+                  <tr id="uploaded-file-{{ file.id }}">
+                    <td>
+                      <a href="{{ file.file.url }}" class="text-decoration-none">
+                        {{ file.file }}
+                      </a>
+                    </td>
+                    <td class=" text-center">
+                      <a class="btn btn-danger btn-sm" onclick="deleteFile('{{ file.id }}', '{{ file.file }}')">
+                        Delete
+                      </a>
+                    </td>
+                  </tr>
+                  {% endfor %}
+                  <tr>
+                    <td colspan="2" class="text-center">
+                      <form
+                        action="{% url 'upload_file' assignment_status.assignment.coursework.id assignment_status.assignment.id %}"
+                        method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <input type="file" name="file-for-upload" id="upload-file" style="display: none;"
+                          onchange="this.form.submit()">
+                        <label for="upload-file" class="fw-bold fs-5" id="label-upload">+</label>
+                      </form>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
       </div>
     </div>
+  </div>
   </div>
 </section>
 {% endblock %}

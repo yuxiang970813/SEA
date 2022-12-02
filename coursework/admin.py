@@ -1,6 +1,6 @@
 from django.contrib.auth.admin import UserAdmin
 from django.contrib import admin
-from .models import StudentList, User, Course, Coursework, Assignment, AssigmentStatus, UploadFile
+from .models import StudentList, User, Course, Coursework, Assignment, AssignmentStatus, UploadFile
 
 
 class UserDisplay(admin.ModelAdmin):
@@ -34,7 +34,7 @@ class AssignmentAdmin(admin.ModelAdmin):
     )
 
 
-class AssigmentStatusAdmin(admin.ModelAdmin):
+class AssignmentStatusAdmin(admin.ModelAdmin):
     list_display = (
         "assignment",
         "student",
@@ -47,5 +47,5 @@ admin.site.register(User, UserDisplay)
 admin.site.register(Course)
 admin.site.register(Coursework)
 admin.site.register(Assignment, AssignmentAdmin)
-admin.site.register(AssigmentStatus, AssigmentStatusAdmin)
+admin.site.register(AssignmentStatus, AssignmentStatusAdmin)
 admin.site.register(UploadFile)
