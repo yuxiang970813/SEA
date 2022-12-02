@@ -378,3 +378,32 @@ def edit_memo(request, coursework_id, assignment_id):
             request, "Something went wrong!"
         )
         return HttpResponseRedirect(reverse("index"))
+
+
+@login_required
+def manage_file(request, coursework_id, assignment_id):
+    # For user later
+    user = request.user
+    assignment = Assignment.objects.get(pk=int(assignment_id))
+    # Make sure user have join coursework
+    if user_in_coursework(user, coursework_id, assignment):
+        # For user later
+        assigment_status = AssigmentStatus.objects.get(
+            assignment=assignment,
+            student=user
+        )
+        # User submit manage file form
+        if request.method == "POST":
+            return
+        # User visit manage file page
+        else:
+            return render(request, "coursework/manage_file.html", {
+                "assigment_status": assigment_status,
+                "upload_file": UploadFile.objects.filter(assignment=assigment_status)
+            })
+    # Remind & redirect to index if user haven't join coursework
+    else:
+        messages.error(
+            request, "Something went wrong!"
+        )
+        return HttpResponseRedirect(reverse("index"))

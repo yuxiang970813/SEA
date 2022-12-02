@@ -19,7 +19,9 @@ urlpatterns = [
     path("coursework/<int:coursework_id>/assignment/<int:assignment_id>",
          views.assignment_view, name="assignment_view"),
     path("coursework/<int:coursework_id>/assignment/<int:assignment_id>/edit",
-         views.edit_memo, name="edit_memo")
+         views.edit_memo, name="edit_memo"),
+    path("coursework/<int:coursework_id>/assignment/<int:assignment_id>/manage",
+         views.manage_file, name="manage_file")
 ]
 
 if settings.DEBUG:

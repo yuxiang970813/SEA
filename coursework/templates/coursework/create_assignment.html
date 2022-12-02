@@ -56,4 +56,13 @@
     </div>
   </div>
 </section>
+<!-- TEMP SCIPRT -->
+<script>
+  // Disable past datetime
+  document.getElementsByName('datetime')[0].min = new Date(
+    Date.now() - new Date().getTimezoneOffset() * 60000
+  )
+    .toISOString()
+    .slice(0, 16);
+</script>
 {% endblock %}

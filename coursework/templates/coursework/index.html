@@ -49,7 +49,8 @@
       <td class="text-center">
         {% if assignment.status.all %}
         <a href="{% url 'edit_memo' assignment.coursework.id assignment.id %}" class="text-decoration-none fw-bold">
-          Edit </a>/<a href="" class="text-decoration-none fw-bold"> Manage</a>
+          Edit </a>/<a href="{% url 'manage_file' assignment.coursework.id assignment.id %}"
+          class="text-decoration-none fw-bold"> Manage</a>
         {% else %}
         <a href="{% url 'assignment_view' assignment.coursework.id assignment.id %}"
           class="text-decoration-none fw-bold">
