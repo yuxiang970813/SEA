@@ -1,5 +1,27 @@
-function deleteFile(element) {
-    //
+function deleteFile(file_id, filename) {
+    // Make sure user really want delete file
+    const result = confirm(`Are you sure want to delete ${filename}?`);
+    if (result === true) {
+        // Request delete file api
+        fetch('/delete/file', {
+            method: 'POST',
+            body: JSON.stringify({
+                file_id: file_id,
+            }),
+        })
+            .then((response) => response.json())
+            .then((result) => {
+                if (result.error) {
+                    alert(result.error);
+                } else if (result.message) {
+                    alert(result.message);
+                    // Remove file row
+                    document
+                        .getElementById(`uploaded-file-${file_id}`)
+                        .remove();
+                }
+            });
+    }
 }
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -23,24 +45,4 @@ document.addEventListener('DOMContentLoaded', () => {
             );
         });
     })();
-
-    document.addEventListener('click', (event) => {
-        // Find what was clicked on
-        const element = event.target;
-
-        // For use later
-        const id = element.dataset.id;
-        const fileRow = document.querySelector(`#uploaded-file-${id}`);
-        console.log(fileRow);
-
-        if (element.className === 'delete-file') {
-            const result = confirm('Are you sure want to delete?');
-            if (result === true) {
-                // Delete file from models
-                // deleteFile(element);
-                // Remove file row in table
-                fileRow.remove();
-            }
-        }
-    });
 });

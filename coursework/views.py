@@ -5,8 +5,10 @@ from django.http import HttpResponseRedirect, HttpResponse
 from django.contrib.auth.decorators import login_required
 from django.utils.encoding import force_str, force_bytes
 from django.core.files.storage import FileSystemStorage
+from django.views.decorators.csrf import csrf_exempt
 from django.template.loader import render_to_string
 from django.core.mail import EmailMessage
+from django.http import JsonResponse
 from django.db import IntegrityError
 from django.contrib import messages
 from django.shortcuts import render
@@ -15,6 +17,7 @@ from django.urls import reverse
 from .models import StudentList, User, Course, Coursework, Assignment, AssigmentStatus, UploadFile
 from .utils import generate_token
 import threading
+import json
 
 
 @login_required
@@ -407,3 +410,36 @@ def manage_file(request, coursework_id, assignment_id):
             request, "Something went wrong!"
         )
         return HttpResponseRedirect(reverse("index"))
+
+
+@csrf_exempt
+@login_required
+def delete_file(request):
+    # Delete file must be via POST
+    if request.method != "POST":
+        return JsonResponse(
+            {"error": "POST request required."},
+            status=400
+        )
+    # Get the file id from the api
+    file_id = json.loads(request.body).get("file_id", "")
+    # Query for request file
+    try:
+        file = UploadFile.objects.get(pk=int(file_id))
+    except UploadFile.DoesNotExist:
+        return JsonResponse(
+            {"error": "File not found"},
+            status=400
+        )
+    # Delete file and return message
+    try:
+        file.delete()
+        return JsonResponse(
+            {"message": "Delete successfully!"},
+            status=200
+        )
+    except:
+        return JsonResponse(
+            {"error": "Delete failed!"},
+            status=400
+        )
