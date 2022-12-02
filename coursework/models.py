@@ -111,7 +111,15 @@ class UploadFile(models.Model):
         on_delete=models.CASCADE,
         related_name="upload_file"
     )
-    file = models.FileField(upload_to=path_and_rename)
+    file = models.FileField(
+        blank=True,
+        null=True,
+        upload_to=path_and_rename
+    )
 
     def __str__(self):
         return f"{self.assignment}({self.file})"
+
+    def delete(self, *args, **kwargs):
+        self.file.delete()
+        super().delete(*args, **kwargs)

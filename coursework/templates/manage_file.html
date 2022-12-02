@@ -1,6 +1,6 @@
 {% extends "coursework/layout.html" %}
 
-{% block title %}Edit Memo{% endblock %}
+{% block title %}Manage Upload File{% endblock %}
 
 {% block body %}
 <section>
@@ -27,15 +27,6 @@
               <div class="mb-3">
                 <label for="disabledTextInput" class="form-label"></label>
                 <input type="text" id="disabledTextInput" class="form-control" value="{{ assignment }}" disabled>
-              </div>
-              <!-- UPLOAD FILE -->
-              <input type="file" class="form-control my-4" id="floatingInput" placeholder="Upload File"
-                name="upload-file" multiple>
-              <!-- MEMO -->
-              <div class="form-floating mb-3">
-                <textarea class="form-control" id="floatingTextarea2" name="memo" style="height: 100px; resize: none"
-                  placeholder="Memo" autofocus>{{ assigment_status.memo }}</textarea>
-                <label for="floatingTextarea2">Memo</label>
               </div>
               <!-- UPLOADED FILE(S) -->
               <div class="mb-3 overflow-auto">
