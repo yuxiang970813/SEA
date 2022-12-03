@@ -357,11 +357,18 @@ def manage_file(request, coursework_id, assignment_id):
     assignment = Assignment.objects.get(pk=int(assignment_id))
     # Make sure user have join coursework
     if user_in_coursework(user, coursework_id, assignment):
-        # For user later
-        assignment_status = AssignmentStatus.objects.get(
-            assignment=assignment,
-            student=user
-        )
+        # Try get the assignment status
+        try:
+            assignment_status = AssignmentStatus.objects.get(
+                assignment=assignment,
+                student=user
+            )
+        # User 1st time submit
+        except AssignmentStatus.DoesNotExist:
+            assignment_status = AssignmentStatus.objects.create(
+                assignment=assignment,
+                student=user
+            )
         # User visit manage file page
         if request.method == "GET":
             return render(request, "coursework/manage_file.html", {
@@ -519,7 +526,6 @@ def view_submit_result(request, coursework_id, assignment_id):
         return HttpResponseRedirect(reverse("index"))
 
 
-# TODO
 @login_required
 def assignment_result(request):
     # Student can't visit result page
