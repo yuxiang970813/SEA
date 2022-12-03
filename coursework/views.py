@@ -311,47 +311,6 @@ def user_in_coursework(user, coursework_id, assignment):
 
 @login_required
 def submit_assignment(request, coursework_id, assignment_id):
-    # For use later
-    user = request.user
-    assignment = Assignment.objects.get(pk=int(assignment_id))
-    # Make sure user have join coursework
-    if user_in_coursework(user, coursework_id, assignment):
-        # User submit assignment form
-        if request.method == "POST":
-            # Create upload assignment status
-            upload_assignment = AssignmentStatus.objects.create(
-                assignment=assignment,
-                student=user,
-                memo=request.POST["memo"]
-            )
-            upload_assignment.save()
-            # Upload file
-            files = request.FILES.getlist("upload-file")
-            for file in files:
-                UploadFile.objects.create(
-                    assignment=upload_assignment,
-                    file=file
-                ).save()
-                # Info user and redirect to index
-            messages.success(
-                request, "Assignment upload successfully!"
-            )
-            return HttpResponseRedirect(reverse("index"))
-        # User visit submit assignment page
-        else:
-            return render(request, "coursework/submit_assignment.html", {
-                "assignment": assignment
-            })
-    # Remind & redirect to index if user haven't join coursework
-    else:
-        messages.error(
-            request, "Something went wrong!"
-        )
-        return HttpResponseRedirect(reverse("index"))
-
-
-@login_required
-def manage_file(request, coursework_id, assignment_id):
     # For user later
     user = request.user
     assignment = Assignment.objects.get(pk=int(assignment_id))
@@ -371,7 +330,7 @@ def manage_file(request, coursework_id, assignment_id):
             )
         # User visit manage file page
         if request.method == "GET":
-            return render(request, "coursework/manage_file.html", {
+            return render(request, "coursework/submit_assignment.html", {
                 "assignment_status": assignment_status,
                 "upload_file": UploadFile.objects.filter(assignment=assignment_status)
             })
