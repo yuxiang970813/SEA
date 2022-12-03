@@ -41,7 +41,7 @@
       <td class="text-center">
         {% if assignment.is_expired %}
           {% if user.status == "Student" %}
-          <a href="" class="btn btn-success btn-sm fw-bold">
+          <a href="{% url 'view_submit_result' assignment.coursework.id assignment.id %}" class="btn btn-success btn-sm fw-bold">
             View
           </a>
           {% else %}

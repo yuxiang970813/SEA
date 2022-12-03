@@ -300,7 +300,7 @@ def create_assignment(request, coursework_id):
 
 
 def user_in_coursework(user, coursework_id, assignment):
-    """user & assignment must be model object"""
+    """Return boolean, user & assignment must be model object"""
     # For use later
     coursework = Coursework.objects.get(pk=int(coursework_id))
     if user in coursework.taken_person.all() and assignment.coursework == coursework:
@@ -493,8 +493,30 @@ def edit_memo(request):
 
 
 @login_required
-def view_upload_result(request, coursework_id, assignment_id):
-    return
+def view_submit_result(request, coursework_id, assignment_id):
+    # For user later
+    user = request.user
+    assignment = Assignment.objects.get(pk=int(assignment_id))
+    # Make sure user have join coursework
+    if user_in_coursework(user, coursework_id, assignment) and request.method == "GET" and assignment.is_expired:
+        # Try query assignment status
+        try:
+            assignment_status = AssignmentStatus.objects.get(
+                assignment=assignment,
+                student=user
+            )
+        # User didn't submit assignment
+        except AssignmentStatus.DoesNotExist:
+            assignment_status = None
+        return render(request, "coursework/view_submit_result.html", {
+            "assignment_status": assignment_status,
+            "upload_file": UploadFile.objects.filter(assignment=assignment_status)
+        })
+    else:
+        messages.error(
+            request, "Something went wrong!"
+        )
+        return HttpResponseRedirect(reverse("index"))
 
 
 # TODO
