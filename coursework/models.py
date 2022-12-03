@@ -1,6 +1,6 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
-from datetime import datetime
+from django.utils import timezone
 import os
 
 
@@ -72,7 +72,7 @@ class Assignment(models.Model):
 
     @property
     def is_expired(self):
-        return datetime.now() > self.deadline
+        return timezone.now() > self.deadline
 
     class Meta:
         ordering = ["coursework", "-created_on"]
