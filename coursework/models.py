@@ -1,5 +1,6 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
+from datetime import datetime
 import os
 
 
@@ -68,6 +69,10 @@ class Assignment(models.Model):
 
     def __str__(self):
         return self.title
+
+    @property
+    def is_expired(self):
+        return datetime.now() > self.deadline
 
     class Meta:
         ordering = ["coursework", "-created_on"]
