@@ -482,3 +482,19 @@ def upload_file(request, coursework_id, assignment_id):
             request, "Something went wrong!"
         )
         return HttpResponseRedirect(reverse("index"))
+
+
+@login_required
+def assignment_result(request):
+    # Student can't visit result page
+    if request.user.status == "Student":
+        messages.warning(
+            request, "You have not permission!"
+        )
+        return HttpResponseRedirect(reverse("index"))
+    # Teacher or teaching assistant visit result page
+    else:
+        if request.method == "GET":
+            return render(request, "coursework/assignment_result.html", {
+                # TODO
+            })

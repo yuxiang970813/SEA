@@ -24,6 +24,8 @@ urlpatterns = [
          views.manage_file, name="manage_file"),
     path("coursework/<int:coursework_id>/assignment/<int:assignment_id>/upload",
          views.upload_file, name="upload_file"),
+    path("coursework/<int:coursework_id>/assignment/<int:assignment_id>/result",
+         views.assignment_result, name="assignment_result"),
     # API Routes
     path("delete/file", views.delete_file, name="delete_file")
 ]
