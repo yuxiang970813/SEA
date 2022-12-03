@@ -75,6 +75,10 @@ class Assignment(models.Model):
     def is_expired(self):
         return timezone.now() > self.deadline
 
+    @property
+    def remain_time(self):
+        return self.deadline - timezone.now()
+
     class Meta:
         ordering = ["coursework", "-created_on"]
 

@@ -27,8 +27,8 @@ class StudentListAdmin(admin.ModelAdmin):
 
 class AssignmentAdmin(admin.ModelAdmin):
     list_display = (
-        "coursework",
         "title",
+        "coursework",
         "created_on",
         "deadline"
     )

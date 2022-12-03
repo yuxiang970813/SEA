@@ -24,7 +24,9 @@ import json
 @login_required
 def index(request):
     return render(request, "coursework/index.html", {
-        "assignments": Assignment.objects.filter(coursework__taken_person=request.user)
+        "assignments": Assignment.objects.filter(
+            coursework__taken_person=request.user
+        )
     })
 
 
@@ -73,7 +75,9 @@ def activate_user(request, uidb64, token):
         return HttpResponseRedirect(reverse("login"))
     # User doesn't exist or token doen't match
     else:
-        return HttpResponse("Something went wrong, please contact teaching assistant.")
+        return HttpResponse(
+            "Something went wrong, please contact teaching assistant."
+        )
 
 
 def login_view(request):
@@ -133,7 +137,9 @@ def register(request):
         # Student id validation
         student_id = request.POST["student-id"]
         try:
-            student = StudentList.objects.get(student_id=student_id)
+            student = StudentList.objects.get(
+                student_id=student_id
+            )
         except StudentList.DoesNotExist:
             messages.error(
                 request, "Invalid student id!"
@@ -181,7 +187,9 @@ def create_coursework(request):
             # Try create new coursework & add teacher to that coursework
             try:
                 new_coursework = Coursework.objects.create(
-                    course=Course.objects.get(pk=request.POST["course-id"])
+                    course=Course.objects.get(
+                        pk=request.POST["course-id"]
+                    )
                 )
                 new_coursework.save()
                 new_coursework.taken_person.add(request.user)
@@ -276,7 +284,9 @@ def create_assignment(request, coursework_id):
         if request.method == "POST":
             try:
                 new_assignment = Assignment.objects.create(
-                    coursework=Coursework.objects.get(pk=coursework_id),
+                    coursework=Coursework.objects.get(
+                        pk=coursework_id
+                    ),
                     title=request.POST["title"],
                     deadline=request.POST["datetime"]
                 )
@@ -295,14 +305,18 @@ def create_assignment(request, coursework_id):
         # User visit create assignment page
         else:
             return render(request, "coursework/create_assignment.html", {
-                "coursework": Coursework.objects.get(pk=int(coursework_id))
+                "coursework": Coursework.objects.get(
+                    pk=int(coursework_id)
+                )
             })
 
 
 def user_in_coursework(user, coursework_id, assignment):
     """Return boolean, user & assignment must be model object"""
     # For use later
-    coursework = Coursework.objects.get(pk=int(coursework_id))
+    coursework = Coursework.objects.get(
+        pk=int(coursework_id)
+    )
     if user in coursework.taken_person.all() and assignment.coursework == coursework:
         return True
     else:
@@ -313,7 +327,9 @@ def user_in_coursework(user, coursework_id, assignment):
 def submit_assignment(request, coursework_id, assignment_id):
     # For user later
     user = request.user
-    assignment = Assignment.objects.get(pk=int(assignment_id))
+    assignment = Assignment.objects.get(
+        pk=int(assignment_id)
+    )
     # Make sure user have join coursework
     if user_in_coursework(user, coursework_id, assignment):
         # Try get the assignment status
@@ -332,7 +348,9 @@ def submit_assignment(request, coursework_id, assignment_id):
         if request.method == "GET":
             return render(request, "coursework/submit_assignment.html", {
                 "assignment_status": assignment_status,
-                "upload_file": UploadFile.objects.filter(assignment=assignment_status)
+                "upload_file": UploadFile.objects.filter(
+                    assignment=assignment_status
+                )
             })
     # Remind & redirect to index if user haven't join coursework
     else:
@@ -352,10 +370,14 @@ def delete_file(request):
             status=400
         )
     # Get the file id from the api
-    file_id = json.loads(request.body).get("file_id", "")
+    file_id = json.loads(request.body).get(
+        "file_id", ""
+    )
     # Query for request file
     try:
-        file = UploadFile.objects.get(pk=int(file_id))
+        file = UploadFile.objects.get(
+            pk=int(file_id)
+        )
     except UploadFile.DoesNotExist:
         return JsonResponse(
             {"error": "File not found."},
@@ -379,7 +401,9 @@ def delete_file(request):
 def upload_file(request, coursework_id, assignment_id):
     # For user later
     user = request.user
-    assignment = Assignment.objects.get(pk=int(assignment_id))
+    assignment = Assignment.objects.get(
+        pk=int(assignment_id)
+    )
     # Make sure user have join coursework
     if user_in_coursework(user, coursework_id, assignment):
         # User upload file
@@ -462,7 +486,9 @@ def edit_memo(request):
 def view_submit_result(request, coursework_id, assignment_id):
     # For user later
     user = request.user
-    assignment = Assignment.objects.get(pk=int(assignment_id))
+    assignment = Assignment.objects.get(
+        pk=int(assignment_id)
+    )
     # Make sure user have join coursework
     if user_in_coursework(user, coursework_id, assignment) and request.method == "GET" and assignment.is_expired:
         # Try query assignment status
@@ -476,7 +502,9 @@ def view_submit_result(request, coursework_id, assignment_id):
             assignment_status = None
         return render(request, "coursework/view_submit_result.html", {
             "assignment_status": assignment_status,
-            "upload_file": UploadFile.objects.filter(assignment=assignment_status)
+            "upload_file": UploadFile.objects.filter(
+                assignment=assignment_status
+            )
         })
     else:
         messages.error(
@@ -497,6 +525,7 @@ def assignment_result(request):
     else:
         # User press result button
         if request.method == "POST":
+            # For use later
             assignment = Assignment.objects.get(
                 pk=request.POST["assignment-id"]
             )
@@ -507,8 +536,14 @@ def assignment_result(request):
                 assignment__in=assignment_status
             )
             return render(request, "coursework/assignment_result.html", {
-                "assignment": assignment,
+                "coursework": Coursework.objects.get(
+                    pk=request.POST["coursework-id"]
+                ),
+                "assignments": assignment,
                 "assignment_status": assignment_status,
+                "submited_students": User.objects.filter(
+                    assignment_student__assignment=assignment
+                ),
                 "files": files
             })
         # Assignment result must via post request
