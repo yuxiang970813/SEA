@@ -32,7 +32,7 @@
               <table class="table table-sm">
                 <thead>
                   <tr>
-                    <th scope="col" colspan="2">Uploaded File(s)</th>
+                    <th scope="col" colspan="3">Uploaded File(s)</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -50,6 +50,16 @@
                     </td>
                   </tr>
                   {% endfor %}
+                  <!-- <tr>
+                    <td>
+                      <div class="progress">
+                        <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar"
+                          aria-label="Animated striped example" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100"
+                          id="progress-bar" style="width: 75%">
+                        </div>
+                      </div>
+                    </td>
+                  </tr> -->
                   <tr>
                     <td colspan="2" class="text-center">
                       <form
@@ -67,7 +77,7 @@
               <!-- MEMO -->
               <div class="form-floating mb-3">
                 <textarea class="form-control" id="edit-memo" name="memo" style="height: 100px; resize: none"
-                  placeholder="Memo" autofocus>{{ assignment_status.memo }}</textarea>
+                  placeholder="Memo">{{ assignment_status.memo }}</textarea>
                 <label for="edit-memo">Memo</label>
               </div>
               <!-- EDIT BUTTON -->
@@ -82,4 +92,17 @@
   </div>
   </div>
 </section>
+<!-- PROGRESS BAR SCRIPT -->
+<!-- <script>
+  const progressFile = document.getElementById('upload-file');
+  const uploadButton = document.getElementById('label-upload');
+  const progressBar = document.getElementById('progress-bar');
+
+  progressFile.addEventListener('change', () => {
+    const uploadFile = progressFile.files[0];
+    const req = new XMLHttpRequest();
+  })
+
+
+</script> -->
 {% endblock %}

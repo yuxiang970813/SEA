@@ -397,7 +397,7 @@ def upload_file(request, coursework_id, assignment_id):
                 request, "Upload successfully"
             )
             return HttpResponseRedirect(reverse(
-                "manage_file",
+                "submit_assignment",
                 args=(
                     coursework_id,
                     assignment_id
