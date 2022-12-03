@@ -19,16 +19,14 @@ urlpatterns = [
          views.create_assignment, name="create_assignment"),
     path("coursework/<int:coursework_id>/assignment/<int:assignment_id>",
          views.assignment_view, name="assignment_view"),
-    path("coursework/<int:coursework_id>/assignment/<int:assignment_id>/edit",
-         views.edit_memo, name="edit_memo"),
     path("coursework/<int:coursework_id>/assignment/<int:assignment_id>/manage",
          views.manage_file, name="manage_file"),
     path("coursework/<int:coursework_id>/assignment/<int:assignment_id>/upload",
          views.upload_file, name="upload_file"),
-    path("coursework/<int:coursework_id>/assignment/<int:assignment_id>/result",
-         views.assignment_result, name="assignment_result"),
-    # API Routes
-    path("delete/file", views.delete_file, name="delete_file")
+    path("assignment/result", views.assignment_result, name="assignment_result"),
+    # API Route
+    path("delete/file", views.delete_file, name="delete_file"),
+    path("edit/memo", views.edit_memo, name="edit_memo")
 ]
 
 if settings.DEBUG:

@@ -1,0 +1,19 @@
+{% extends "coursework/layout.html" %}
+
+{% block title %}Assignment Result{% endblock %}
+
+{% block body %}
+<h1>{{ assignment }}</h1>
+{% for assignment in assignment_status %}
+<h2>Memo</h2>
+{{ assignment.student }} with memo {{ assignment.memo }}<br>
+{% empty %}
+No student submit.
+{% endfor %}
+<h2>Files</h2>
+{% for file in files %}
+{{ file }}
+{% empty %}
+No file available.
+{% endfor %}
+{% endblock %}

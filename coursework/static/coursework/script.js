@@ -24,6 +24,28 @@ function deleteFile(file_id, filename) {
     }
 }
 
+function editMemo(assignmentStatusId) {
+    // Search for the memo textarea
+    const newMemo = document.getElementById('edit-memo').value;
+    // Request edit memo api
+    fetch('/edit/memo', {
+        method: 'POST',
+        body: JSON.stringify({
+            assignmentStatusId: assignmentStatusId,
+            newMemo: newMemo,
+        }),
+    })
+        .then((response) => response.json())
+        .then((result) => {
+            if (result.error) {
+                alert(result.error);
+            } else if (result.message) {
+                alert(result.message);
+                location.replace('/');
+            }
+        });
+}
+
 document.addEventListener('DOMContentLoaded', () => {
     // Bootstrap client side validation function
     (function () {

@@ -64,6 +64,16 @@
                   </tr>
                 </tbody>
               </table>
+              <!-- MEMO -->
+              <div class="form-floating mb-3">
+                <textarea class="form-control" id="edit-memo" name="memo" style="height: 100px; resize: none"
+                  placeholder="Memo" autofocus>{{ assignment_status.memo }}</textarea>
+                <label for="edit-memo">Memo</label>
+              </div>
+              <!-- EDIT BUTTON -->
+              <div class="text-center mt-3">
+                <button class="btn btn-secondary" onclick="editMemo('{{ assignment_status.id }}')">Save Edit</button>
+              </div>
             </div>
           </div>
         </div>

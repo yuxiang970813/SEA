@@ -351,40 +351,6 @@ def assignment_view(request, coursework_id, assignment_id):
 
 
 @login_required
-def edit_memo(request, coursework_id, assignment_id):
-    # For user later
-    user = request.user
-    assignment = Assignment.objects.get(pk=int(assignment_id))
-    # Make sure user have join coursework
-    if user_in_coursework(user, coursework_id, assignment):
-        # For user later
-        assignment_status = AssignmentStatus.objects.get(
-            assignment=assignment,
-            student=user
-        )
-        # User submit edit assignment form
-        if request.method == "POST":
-            # Update new version memo & redirect to index
-            assignment_status.memo = request.POST["memo"]
-            assignment_status.save()
-            messages.success(
-                request, "Memo edit successfully!"
-            )
-            return HttpResponseRedirect(reverse("index"))
-        # User visit edit assignment page
-        else:
-            return render(request, "coursework/edit_assignment.html", {
-                "assignment_status": assignment_status
-            })
-    # Remind & redirect to index if user haven't join coursework
-    else:
-        messages.error(
-            request, "Something went wrong!"
-        )
-        return HttpResponseRedirect(reverse("index"))
-
-
-@login_required
 def manage_file(request, coursework_id, assignment_id):
     # For user later
     user = request.user
@@ -426,7 +392,7 @@ def delete_file(request):
         file = UploadFile.objects.get(pk=int(file_id))
     except UploadFile.DoesNotExist:
         return JsonResponse(
-            {"error": "File not found"},
+            {"error": "File not found."},
             status=400
         )
     # Delete file and return message
@@ -485,6 +451,47 @@ def upload_file(request, coursework_id, assignment_id):
         return HttpResponseRedirect(reverse("index"))
 
 
+@csrf_exempt
+@login_required
+def edit_memo(request):
+    # Edit memo must be via POST
+    if request.method != "POST":
+        return JsonResponse(
+            {"error": "POST request required."},
+            status=400
+        )
+    # Get the assignment status id from the api
+    assignment_status_id = json.loads(request.body).get(
+        "assignmentStatusId", ""
+    )
+    new_memo = json.loads(request.body).get(
+        "newMemo", ""
+    )
+    # Query for request assignment status
+    try:
+        assignment_status = AssignmentStatus.objects.get(
+            pk=int(assignment_status_id)
+        )
+    except AssignmentStatus.DoesNotExist:
+        return JsonResponse(
+            {"error": "Assignment status not found."},
+            status=400
+        )
+    # Update memo
+    try:
+        assignment_status.memo = new_memo
+        assignment_status.save()
+        return JsonResponse(
+            {"message": "Edit successfully!"},
+            status=200
+        )
+    except:
+        return JsonResponse(
+            {"error": "Edit failed!"},
+            status=400
+        )
+
+
 @login_required
 def assignment_result(request):
     # Student can't visit result page
@@ -495,7 +502,25 @@ def assignment_result(request):
         return HttpResponseRedirect(reverse("index"))
     # Teacher or teaching assistant visit result page
     else:
-        if request.method == "GET":
+        # User press result button
+        if request.method == "POST":
+            assignment = Assignment.objects.get(
+                pk=request.POST["assignment-id"]
+            )
+            assignment_status = AssignmentStatus.objects.filter(
+                assignment=assignment
+            )
+            files = UploadFile.objects.filter(
+                assignment__in=assignment_status
+            )
             return render(request, "coursework/assignment_result.html", {
-                # TODO
+                "assignment": assignment,
+                "assignment_status": assignment_status,
+                "files": files
             })
+        # Assignment result must via post request
+        else:
+            messages.error(
+                request, "Post method required."
+            )
+            return HttpResponseRedirect(reverse("index"))
