@@ -310,7 +310,7 @@ def user_in_coursework(user, coursework_id, assignment):
 
 
 @login_required
-def assignment_view(request, coursework_id, assignment_id):
+def submit_assignment(request, coursework_id, assignment_id):
     # For use later
     user = request.user
     assignment = Assignment.objects.get(pk=int(assignment_id))
@@ -339,7 +339,7 @@ def assignment_view(request, coursework_id, assignment_id):
             return HttpResponseRedirect(reverse("index"))
         # User visit submit assignment page
         else:
-            return render(request, "coursework/assignment_view.html", {
+            return render(request, "coursework/submit_assignment.html", {
                 "assignment": assignment
             })
     # Remind & redirect to index if user haven't join coursework
@@ -492,6 +492,12 @@ def edit_memo(request):
         )
 
 
+@login_required
+def view_upload_result(request, coursework_id, assignment_id):
+    return
+
+
+# TODO
 @login_required
 def assignment_result(request):
     # Student can't visit result page
