@@ -542,17 +542,17 @@ def assignment_result(request):
                     student_who_submit_memo.append(submitted.student)
             print(student_who_submit_memo)
             # Get the list of students who have uploaded file
-            # TODO
+            student_who_upload_file = []
+            for file in files:
+                student_who_upload_file.append(file.assignment.student)
             return render(request, "coursework/assignment_result.html", {
                 "coursework": Coursework.objects.get(
                     pk=request.POST["coursework-id"]
                 ),
                 "assignments": assignment,
                 "assignment_status": assignment_status,
-                "submited_students": User.objects.filter(
-                    assignment_student__assignment=assignment
-                ),
                 "student_who_submit_memo": student_who_submit_memo,
+                "student_who_upload_file": student_who_upload_file,
                 "files": files
             })
         # Assignment result must via post request
