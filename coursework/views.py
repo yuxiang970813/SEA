@@ -535,6 +535,14 @@ def assignment_result(request):
             files = UploadFile.objects.filter(
                 assignment__in=assignment_status
             )
+            # Get the list of students who have submited the memo
+            student_who_submit_memo = []
+            for a in assignment_status:
+                if a.memo:
+                    student_who_submit_memo.append(a.student)
+            print(student_who_submit_memo)
+            # Get the list of students who have uploaded file
+            # TODO
             return render(request, "coursework/assignment_result.html", {
                 "coursework": Coursework.objects.get(
                     pk=request.POST["coursework-id"]
@@ -544,6 +552,7 @@ def assignment_result(request):
                 "submited_students": User.objects.filter(
                     assignment_student__assignment=assignment
                 ),
+                "student_who_submit_memo": student_who_submit_memo,
                 "files": files
             })
         # Assignment result must via post request
