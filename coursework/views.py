@@ -537,9 +537,9 @@ def assignment_result(request):
             )
             # Get the list of students who have submited the memo
             student_who_submit_memo = []
-            for a in assignment_status:
-                if a.memo:
-                    student_who_submit_memo.append(a.student)
+            for submitted in assignment_status:
+                if submitted.memo:
+                    student_who_submit_memo.append(submitted.student)
             print(student_who_submit_memo)
             # Get the list of students who have uploaded file
             # TODO
