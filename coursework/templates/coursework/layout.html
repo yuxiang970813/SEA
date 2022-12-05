@@ -61,10 +61,21 @@
               {% endif %}
             </ul>
           </li>
-          <!-- NAME -->
-          <li class="nav-item"><a class="nav-link" href="#">{{ user.last_name }}{{ user.first_name }}</a></li>
-          <!-- LOGOUT -->
-          <li class="nav-item"><a class="nav-link" href="{% url 'logout' %}">Logout</a></li>
+          <!-- USER(DROPDOWN) -->
+          <li class="nav-item dropdown">
+            <!-- NAME -->
+            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              {{ user.last_name }}{{ user.first_name }}
+            </a>
+            <ul class="dropdown-menu dropdown-menu-dark">
+              <!-- LOGOUT -->
+              <li>
+                <a class="dropdown-item" href="{% url 'logout' %}">
+                  Logout
+                </a>
+              </li>
+            </ul>
+          </li>
           {% else %}
           <!-- REGISTER -->
           <li class="nav-item"><a class="nav-link" href="{% url 'register' %}">Register</a></li>
