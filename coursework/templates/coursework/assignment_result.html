@@ -186,4 +186,9 @@
     </div>
   </div>
 </div>
+<form action="{% url 'get_compress_file' %}" method="post">
+  {% csrf_token %}
+  <input type="hidden" name="assignment-id" value="{{ assignments.id }}">
+  <button type="submit">Download ptx</button>
+</form>
 {% endblock %}

@@ -13,12 +13,12 @@ from django.contrib import messages
 from django.shortcuts import render
 from django.conf import settings
 from django.urls import reverse
-
 from .models import StudentList, User, Course, Coursework, Assignment, AssignmentStatus, UploadFile
 from .utils import generate_token
-
 import threading
+import zipfile
 import json
+import os
 
 
 @login_required
@@ -540,7 +540,6 @@ def assignment_result(request):
             for submitted in assignment_status:
                 if submitted.memo:
                     student_who_submit_memo.append(submitted.student)
-            print(student_who_submit_memo)
             # Get the list of students who have uploaded file
             student_who_upload_file = []
             for file in files:
@@ -561,3 +560,28 @@ def assignment_result(request):
                 request, "Post method required."
             )
             return HttpResponseRedirect(reverse("index"))
+
+
+@login_required
+def get_compress_file(request):
+    # For use later
+    assignment = Assignment.objects.get(
+        pk=request.POST["assignment-id"]
+    )
+    # Zip file
+    zip_file_name = "{coursework_name}_{assignment_name}_{date}.zip".format(
+        coursework_name=assignment.coursework,
+        assignment_name=assignment,
+        date=assignment.deadline.strftime("%Y%m%d")
+    )
+    zip_handle = zipfile.ZipFile(zip_file_name, "w")
+    os.chdir(settings.MEDIA_ROOT)
+    for file in os.listdir():
+        if file.endswith(".ptx") and file.startswith("Course_B_Assignment_B1_20221206_"):
+            zip_handle.write(
+                file,
+                compress_type=zipfile.ZIP_DEFLATED
+            )
+    zip_handle.close()
+
+    return HttpResponse("Try")

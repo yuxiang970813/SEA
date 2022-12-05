@@ -24,6 +24,7 @@ urlpatterns = [
     path("coursework/<int:coursework_id>/assignment/<int:assignment_id>/view",
          views.view_submit_result, name="view_submit_result"),
     path("assignment/result", views.assignment_result, name="assignment_result"),
+    path("download/ptx", views.get_compress_file, name="get_compress_file"),
     # API Route
     path("delete/file", views.delete_file, name="delete_file"),
     path("edit/memo", views.edit_memo, name="edit_memo")
