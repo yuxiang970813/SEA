@@ -13,6 +13,9 @@ class StudentList(models.Model):
     def __str__(self):
         return f"{self.last_name}{self.first_name}-{self.student_id}"
 
+    class Meta:
+        ordering = ["student_id"]
+
 
 class User(AbstractUser):
     STATUS = (
@@ -26,6 +29,9 @@ class User(AbstractUser):
         default="Student"
     )
     is_email_verified = models.BooleanField(default=False)
+
+    class Meta:
+        ordering = ["username"]
 
 
 class Course(models.Model):
@@ -80,7 +86,10 @@ class Assignment(models.Model):
         return self.deadline - timezone.now()
 
     class Meta:
-        ordering = ["coursework", "-created_on"]
+        ordering = [
+            "coursework",
+            "-created_on"
+        ]
 
 
 class AssignmentStatus(models.Model):
@@ -102,13 +111,19 @@ class AssignmentStatus(models.Model):
     def __str__(self):
         return f"{self.student} upload {self.assignment}"
 
+    class Meta:
+        ordering = [
+            "assignment",
+            "student__username"
+        ]
+
 
 def path_and_rename(instance, filename):
     file_format = filename.split(".")[-1]
     filename = "{coursework_name}_{assignment_name}_{date}_{student_id}.{file_format}".format(
         coursework_name=instance.assignment.assignment.coursework,
         assignment_name=instance.assignment.assignment,
-        date=instance.assignment.assignment.deadline.strftime("%Y%m%m"),
+        date=instance.assignment.assignment.deadline.strftime("%Y%m%d"),
         student_id=instance.assignment.student.username,
         file_format=file_format
     )
@@ -133,3 +148,10 @@ class UploadFile(models.Model):
     def delete(self, *args, **kwargs):
         self.file.delete()
         super().delete(*args, **kwargs)
+
+    class Meta:
+        ordering = [
+            "assignment",
+            "assignment__student",
+            "file"
+        ]
