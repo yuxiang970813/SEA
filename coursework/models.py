@@ -1,14 +1,17 @@
 from django.contrib.auth.models import AbstractUser
 from django.utils import timezone
 from django.db import models
-
 import os
 
 
 class StudentList(models.Model):
     student_id = models.IntegerField()
-    first_name = models.CharField(max_length=18)
-    last_name = models.CharField(max_length=18)
+    first_name = models.CharField(
+        max_length=18
+    )
+    last_name = models.CharField(
+        max_length=18
+    )
 
     def __str__(self):
         return f"{self.last_name}{self.first_name}-{self.student_id}"
@@ -28,14 +31,18 @@ class User(AbstractUser):
         choices=STATUS,
         default="Student"
     )
-    is_email_verified = models.BooleanField(default=False)
+    is_email_verified = models.BooleanField(
+        default=False
+    )
 
     class Meta:
         ordering = ["username"]
 
 
 class Course(models.Model):
-    name = models.CharField(max_length=60)
+    name = models.CharField(
+        max_length=60
+    )
 
     def __str__(self):
         return self.name
@@ -70,8 +77,12 @@ class Assignment(models.Model):
         on_delete=models.PROTECT,
         related_name="assignment"
     )
-    title = models.CharField(max_length=128)
-    created_on = models.DateTimeField(auto_now_add=True)
+    title = models.CharField(
+        max_length=128
+    )
+    created_on = models.DateTimeField(
+        auto_now_add=True
+    )
     deadline = models.DateTimeField()
 
     def __str__(self):
@@ -119,15 +130,22 @@ class AssignmentStatus(models.Model):
 
 
 def path_and_rename(instance, filename):
-    file_format = filename.split(".")[-1]
-    filename = "{coursework_name}_{assignment_name}_{date}_{student_id}.{file_format}".format(
-        coursework_name=instance.assignment.assignment.coursework,
-        assignment_name=instance.assignment.assignment,
-        date=instance.assignment.assignment.deadline.strftime("%Y%m%d"),
-        student_id=instance.assignment.student.username,
-        file_format=file_format
+    # For use later
+    assign = instance.assignment
+    # Return path and name
+    return os.path.join(
+        # Naming path
+        "{coursework_name}_{assignment_name}_{date}".format(
+            coursework_name=assign.assignment.coursework,
+            assignment_name=assign.assignment,
+            date=assign.assignment.deadline.strftime("%Y%m%d")
+        ),
+        # Naming file according to the sutdent id and file format
+        "{student_id}.{file_format}".format(
+            student_id=assign.student.username,
+            file_format=filename.split(".")[-1]
+        )
     )
-    return os.path.join("", filename)
 
 
 class UploadFile(models.Model):
@@ -155,3 +173,12 @@ class UploadFile(models.Model):
             "assignment__student",
             "file"
         ]
+
+
+class ResultZipFile(models.Model):
+    assignment = models.ForeignKey(
+        Assignment,
+        on_delete=models.CASCADE,
+        related_name="zip_file"
+    )
+    file = models.FileField()

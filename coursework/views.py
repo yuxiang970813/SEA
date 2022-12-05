@@ -13,7 +13,7 @@ from django.contrib import messages
 from django.shortcuts import render
 from django.conf import settings
 from django.urls import reverse
-from .models import StudentList, User, Course, Coursework, Assignment, AssignmentStatus, UploadFile
+from .models import StudentList, User, Course, Coursework, Assignment, AssignmentStatus, UploadFile, ResultZipFile
 from .utils import generate_token
 import threading
 import zipfile
@@ -513,6 +513,29 @@ def view_submit_result(request, coursework_id, assignment_id):
         return HttpResponseRedirect(reverse("index"))
 
 
+def create_zip_file(assignment):
+    # Create path
+    path_name = os.path.join(
+        settings.MEDIA_ROOT,
+        "{coursework_name}_{assignment_name}_{date}".format(
+            coursework_name=assignment.coursework,
+            assignment_name=assignment,
+            date=assignment.deadline.strftime("%Y%m%d")
+        )
+    )
+    # Zip file
+    with zipfile.ZipFile(f"{path_name}.zip", "w", compression=zipfile.ZIP_DEFLATED) as zip_file:
+        os.chdir(path_name)
+        for file in os.listdir():
+            if file.endswith(".txt"):
+                zip_file.write(file)
+    # Create zip file in database
+    ResultZipFile.objects.create(
+        assignment=assignment,
+        file=""
+    ).save()
+
+
 @login_required
 def assignment_result(request):
     # Student can't visit result page
@@ -535,6 +558,15 @@ def assignment_result(request):
             files = UploadFile.objects.filter(
                 assignment__in=assignment_status
             )
+            # Try get ptx zip file if have student submitted file
+            if files:
+                try:
+                    zip_file = ResultZipFile.objects.get(
+                        assignment=assignment
+                    )
+                # Create zip file if doesn't exist
+                except ResultZipFile.DoesNotExist:
+                    create_zip_file(assignment)
             # Get the list of students who have submited the memo
             student_who_submit_memo = []
             for submitted in assignment_status:
@@ -544,6 +576,7 @@ def assignment_result(request):
             student_who_upload_file = []
             for file in files:
                 student_who_upload_file.append(file.assignment.student)
+            # Return page
             return render(request, "coursework/assignment_result.html", {
                 "coursework": Coursework.objects.get(
                     pk=request.POST["coursework-id"]
@@ -551,8 +584,7 @@ def assignment_result(request):
                 "assignments": assignment,
                 "assignment_status": assignment_status,
                 "student_who_submit_memo": student_who_submit_memo,
-                "student_who_upload_file": student_who_upload_file,
-                "files": files
+                "student_who_upload_file": student_who_upload_file
             })
         # Assignment result must via post request
         else:
@@ -560,28 +592,3 @@ def assignment_result(request):
                 request, "Post method required."
             )
             return HttpResponseRedirect(reverse("index"))
-
-
-@login_required
-def get_compress_file(request):
-    # For use later
-    assignment = Assignment.objects.get(
-        pk=request.POST["assignment-id"]
-    )
-    # Zip file
-    zip_file_name = "{coursework_name}_{assignment_name}_{date}.zip".format(
-        coursework_name=assignment.coursework,
-        assignment_name=assignment,
-        date=assignment.deadline.strftime("%Y%m%d")
-    )
-    zip_handle = zipfile.ZipFile(zip_file_name, "w")
-    os.chdir(settings.MEDIA_ROOT)
-    for file in os.listdir():
-        if file.endswith(".ptx") and file.startswith("Course_B_Assignment_B1_20221206_"):
-            zip_handle.write(
-                file,
-                compress_type=zipfile.ZIP_DEFLATED
-            )
-    zip_handle.close()
-
-    return HttpResponse("Try")
