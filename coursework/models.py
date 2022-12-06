@@ -61,6 +61,7 @@ class Assignment(models.Model):
     title = models.CharField(max_length=128)
     created_on = models.DateTimeField(auto_now_add=True)
     deadline = models.DateTimeField()
+    result_zip_file = models.FileField(null=True)
 
     def __str__(self):
         return self.title

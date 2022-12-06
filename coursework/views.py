@@ -331,6 +331,7 @@ def submit_assignment(request, coursework_id, assignment_id):
         return HttpResponseRedirect(reverse("index"))
 
 
+# API
 @csrf_exempt
 @login_required
 def delete_file(request):
@@ -357,31 +358,27 @@ def upload_file(request, coursework_id, assignment_id):
     # For user later
     user = request.user
     assignment = Assignment.objects.get(pk=int(assignment_id))
-    # Make sure user have join coursework
-    if user_in_coursework(user, coursework_id, assignment):
+    # Make sure user have join coursework and request via post method
+    if user_in_coursework(user, coursework_id, assignment) and request.method == "POST":
         # User upload file
-        if request.method == "POST":
-            assignment_status = AssignmentStatus.objects.get(
-                assignment=assignment, student=user
-            )
-            # Upload file
-            UploadFile.objects.create(
-                assignment=assignment_status, file=request.FILES["file-for-upload"]
-            ).save()
-            messages.success(request, "Upload successfully")
-            return HttpResponseRedirect(
-                reverse("submit_assignment", args=(coursework_id, assignment_id))
-            )
-        # Upload must be post request!
-        else:
-            messages.error(request, "POST request required!")
-            return HttpResponseRedirect(reverse("index"))
-    # Remind & redirect to index if user haven't join coursework
+        assignment_status = AssignmentStatus.objects.get(
+            assignment=assignment, student=user
+        )
+        # Upload file
+        UploadFile.objects.create(
+            assignment=assignment_status, file=request.FILES["file-for-upload"]
+        ).save()
+        messages.success(request, "Upload successfully")
+        return HttpResponseRedirect(
+            reverse("submit_assignment", args=(coursework_id, assignment_id))
+        )
+    # Remind & redirect to index if user haven't join coursework or request via get method
     else:
         messages.error(request, "Something went wrong!")
         return HttpResponseRedirect(reverse("index"))
 
 
+# API
 @csrf_exempt
 @login_required
 def edit_memo(request):
@@ -410,7 +407,7 @@ def view_submit_result(request, coursework_id, assignment_id):
     # For user later
     user = request.user
     assignment = Assignment.objects.get(pk=int(assignment_id))
-    # Make sure user have join coursework
+    # Make sure user have join coursework & request via get method & assignment is expired
     if (
         user_in_coursework(user, coursework_id, assignment)
         and request.method == "GET"
@@ -421,9 +418,10 @@ def view_submit_result(request, coursework_id, assignment_id):
             assignment_status = AssignmentStatus.objects.get(
                 assignment=assignment, student=user
             )
-        # User didn't submit assignment
+        # Set assignment status to None if didn't submit assignment
         except AssignmentStatus.DoesNotExist:
             assignment_status = None
+        # Render page
         return render(
             request,
             "coursework/view_submit_result.html",
@@ -432,11 +430,13 @@ def view_submit_result(request, coursework_id, assignment_id):
                 "upload_file": UploadFile.objects.filter(assignment=assignment_status),
             },
         )
+    # Showing error message & redirect to index
     else:
         messages.error(request, "Something went wrong!")
         return HttpResponseRedirect(reverse("index"))
 
 
+"""
 def create_zip_file(assignment):
     # Create path and zip file name
     path_name = os.path.join(
@@ -454,46 +454,39 @@ def create_zip_file(assignment):
         for file in os.listdir():
             if file.endswith(".ptx"):
                 zip_file.write(file)
+"""
 
 
 @login_required
 def assignment_result(request):
-    # Student can't visit result page
-    if request.user.status == "Student":
-        messages.warning(request, "You have not permission!")
-        return HttpResponseRedirect(reverse("index"))
-    # Teacher or teaching assistant visit result page
+    # User must be teacher or TA & request must be post method
+    if request.user.status != "Student" and request.method == "POST":
+        # For use later
+        assignment = Assignment.objects.get(pk=request.POST["assignment-id"])
+        assignment_status = AssignmentStatus.objects.filter(assignment=assignment)
+        files = UploadFile.objects.filter(assignment__in=assignment_status)
+        # Get the list of students who have submited the memo
+        student_who_submit_memo = []
+        for submitted in assignment_status:
+            if submitted.memo:
+                student_who_submit_memo.append(submitted.student)
+        # Get the list of students who have uploaded file
+        student_who_upload_file = []
+        for file in files:
+            student_who_upload_file.append(file.assignment.student)
+        # Render page
+        return render(
+            request,
+            "coursework/assignment_result.html",
+            {
+                "coursework": Coursework.objects.get(pk=request.POST["coursework-id"]),
+                "assignments": assignment,
+                "assignment_status": assignment_status,
+                "student_who_submit_memo": student_who_submit_memo,
+                "student_who_upload_file": student_who_upload_file,
+            },
+        )
+    # Showing error message & redirect to index
     else:
-        # User press result button
-        if request.method == "POST":
-            # For use later
-            assignment = Assignment.objects.get(pk=request.POST["assignment-id"])
-            assignment_status = AssignmentStatus.objects.filter(assignment=assignment)
-            files = UploadFile.objects.filter(assignment__in=assignment_status)
-            # Get the list of students who have submited the memo
-            student_who_submit_memo = []
-            for submitted in assignment_status:
-                if submitted.memo:
-                    student_who_submit_memo.append(submitted.student)
-            # Get the list of students who have uploaded file
-            student_who_upload_file = []
-            for file in files:
-                student_who_upload_file.append(file.assignment.student)
-            # Return page
-            return render(
-                request,
-                "coursework/assignment_result.html",
-                {
-                    "coursework": Coursework.objects.get(
-                        pk=request.POST["coursework-id"]
-                    ),
-                    "assignments": assignment,
-                    "assignment_status": assignment_status,
-                    "student_who_submit_memo": student_who_submit_memo,
-                    "student_who_upload_file": student_who_upload_file,
-                },
-            )
-        # Assignment result must via post request
-        else:
-            messages.error(request, "Post method required.")
-            return HttpResponseRedirect(reverse("index"))
+        messages.error(request, "Something went wrong!")
+        return HttpResponseRedirect(reverse("index"))
