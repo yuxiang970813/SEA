@@ -158,27 +158,27 @@
       data-bs-parent="#accordionExample">
       <div class="accordion-body">
         {% for submitted_file in assignment_status %}
-          {% if submitted_file.upload_file.all %}
-          <ul class="list-group">
-            <li class="list-group-item list-group-item-dark fw-bold">
-              {{ submitted_file.student.last_name }}{{ submitted_file.student.first_name }}({{ submitted_file.student }})
-            </li>
-            {% for file in submitted_file.upload_file.all %}
-            <li class="list-group-item overflow-auto" style="word-break: break-word">
-              {% if ".wav" in file.file.name %}
-              <audio controls>
-                <source src="{{ file.file.url }}" type="audio/wav">
-              </audio>
-              {% else %}
-              <a href="{{ file.file.url }}" class="text-decoration-none">
-                {{ file.file }}
-              </a>
-              {% endif %}
-            </li>
-            {% endfor %}
-          </ul>
-          <hr>
-          {% endif %}
+        {% if submitted_file.upload_file.all %}
+        <ul class="list-group">
+          <li class="list-group-item list-group-item-dark fw-bold">
+            {{ submitted_file.student.last_name }}{{ submitted_file.student.first_name }}({{ submitted_file.student }})
+          </li>
+          {% for file in submitted_file.upload_file.all %}
+          <li class="list-group-item overflow-auto" style="word-break: break-word">
+            {% if ".wav" in file.file.name %}
+            <audio controls>
+              <source src="{{ file.file.url }}" type="audio/wav">
+            </audio>
+            {% else %}
+            <a href="{{ file.file.url }}" class="text-decoration-none">
+              {{ file.file }}
+            </a>
+            {% endif %}
+          </li>
+          {% endfor %}
+        </ul>
+        <hr>
+        {% endif %}
         {% empty %}
         No uploaded file available...
         {% endfor %}
@@ -186,4 +186,7 @@
     </div>
   </div>
 </div>
+{% if assignments.result_zip_file %}
+<a href="{{ assignments.result_zip_file.url }}">{{ assignments.result_zip_file.name }}</a>
+{% endif %}
 {% endblock %}

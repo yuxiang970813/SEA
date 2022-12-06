@@ -61,7 +61,7 @@ class Assignment(models.Model):
     title = models.CharField(max_length=128)
     created_on = models.DateTimeField(auto_now_add=True)
     deadline = models.DateTimeField()
-    result_zip_file = models.FileField(null=True)
+    result_zip_file = models.FileField(null=True, blank=True)
 
     def __str__(self):
         return self.title
@@ -99,16 +99,8 @@ def path_and_rename(instance, filename):
     assign = instance.assignment
     # Return path and name
     return os.path.join(
-        # Path folder name
-        "{coursework_name}_{assignment_name}_{date}".format(
-            coursework_name=assign.assignment.coursework,
-            assignment_name=assign.assignment,
-            date=assign.assignment.deadline.strftime("%Y%m%d"),
-        ),
-        # Rename file
-        "{student_id}.{file_format}".format(
-            student_id=assign.student.username, file_format=filename.split(".")[-1]
-        ),
+        f"{assign.assignment.coursework}_{assign.assignment}_{assign.assignment.deadline.strftime('%Y%m%d')}",
+        f"{assign.student.username}.{filename.split('.')[-1]}",
     )
 
 

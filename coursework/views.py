@@ -436,25 +436,29 @@ def view_submit_result(request, coursework_id, assignment_id):
         return HttpResponseRedirect(reverse("index"))
 
 
-"""
 def create_zip_file(assignment):
     # Create path and zip file name
-    path_name = os.path.join(
-        settings.MEDIA_ROOT,
-        "{coursework_name}_{assignment_name}_{date}".format(
-            coursework_name=assignment.coursework,
-            assignment_name=assignment,
-            date=assignment.deadline.strftime("%Y%m%d"),
-        ),
+    folder_name = (
+        f"{assignment.coursework}_{assignment}_{assignment.deadline.strftime('%Y%m%d')}"
     )
-    zip_file_name = f"{path_name}.zip"
+    path_name = os.path.join(settings.MEDIA_ROOT, folder_name)
+    zip_file_name = f"{path_name}/{folder_name}.zip"
     # Compress zip file
     with ZipFile(zip_file_name, "w", compression=ZIP_DEFLATED) as zip_file:
         os.chdir(path_name)
+        print(os.chdir(path_name))
         for file in os.listdir():
-            if file.endswith(".ptx"):
+            print(os.listdir())
+            if file.endswith(".txt"):
+                print("i")
                 zip_file.write(file)
-"""
+    # Add that zip file to assignment
+    path = Path(zip_file_name)
+    with path.open(mode="rb") as f:
+        assignment.result_zip_file = File(f, name=path.name)
+        assignment.save()
+    # Delete zip file after add to assignment
+    os.remove(zip_file_name)
 
 
 @login_required
@@ -465,6 +469,11 @@ def assignment_result(request):
         assignment = Assignment.objects.get(pk=request.POST["assignment-id"])
         assignment_status = AssignmentStatus.objects.filter(assignment=assignment)
         files = UploadFile.objects.filter(assignment__in=assignment_status)
+        # Create result zip file if doesn't exist
+        if files and not assignment.result_zip_file:
+            print("1")
+            create_zip_file(assignment)
+            print("YES")
         # Get the list of students who have submited the memo
         student_who_submit_memo = []
         for submitted in assignment_status:
