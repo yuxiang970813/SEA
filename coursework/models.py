@@ -173,12 +173,3 @@ class UploadFile(models.Model):
             "assignment__student",
             "file"
         ]
-
-
-class ResultZipFile(models.Model):
-    assignment = models.ForeignKey(
-        Assignment,
-        on_delete=models.CASCADE,
-        related_name="zip_file"
-    )
-    file = models.FileField()

@@ -11,9 +11,10 @@ from django.http import JsonResponse
 from django.db import IntegrityError
 from django.contrib import messages
 from django.shortcuts import render
+from django.core.files import File
 from django.conf import settings
 from django.urls import reverse
-from .models import StudentList, User, Course, Coursework, Assignment, AssignmentStatus, UploadFile, ResultZipFile
+from .models import StudentList, User, Course, Coursework, Assignment, AssignmentStatus, UploadFile
 from .utils import generate_token
 import threading
 import zipfile
@@ -514,7 +515,9 @@ def view_submit_result(request, coursework_id, assignment_id):
 
 
 def create_zip_file(assignment):
-    # Create path
+    # Create path and zip file name
+    pass
+    """
     path_name = os.path.join(
         settings.MEDIA_ROOT,
         "{coursework_name}_{assignment_name}_{date}".format(
@@ -523,17 +526,22 @@ def create_zip_file(assignment):
             date=assignment.deadline.strftime("%Y%m%d")
         )
     )
-    # Zip file
-    with zipfile.ZipFile(f"{path_name}.zip", "w", compression=zipfile.ZIP_DEFLATED) as zip_file:
+    zip_file_name = f"{path_name}.zip"
+    # Compress zip file
+    with zipfile.ZipFile(zip_file_name, "w", compression=zipfile.ZIP_DEFLATED) as zip_file:
         os.chdir(path_name)
         for file in os.listdir():
-            if file.endswith(".txt"):
+            if file.endswith(".ptx"):
                 zip_file.write(file)
     # Create zip file in database
+    local_file = open(zip_file_name)
+    django_file = File(local_file)
     ResultZipFile.objects.create(
         assignment=assignment,
-        file=""
+        file=django_file
     ).save()
+    local_file.close()
+    """
 
 
 @login_required
@@ -558,15 +566,6 @@ def assignment_result(request):
             files = UploadFile.objects.filter(
                 assignment__in=assignment_status
             )
-            # Try get ptx zip file if have student submitted file
-            if files:
-                try:
-                    zip_file = ResultZipFile.objects.get(
-                        assignment=assignment
-                    )
-                # Create zip file if doesn't exist
-                except ResultZipFile.DoesNotExist:
-                    create_zip_file(assignment)
             # Get the list of students who have submited the memo
             student_who_submit_memo = []
             for submitted in assignment_status:
