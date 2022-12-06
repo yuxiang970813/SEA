@@ -1,5 +1,13 @@
 from django.contrib import admin
-from .models import StudentList, User, Course, Coursework, Assignment, AssignmentStatus, UploadFile
+from .models import (
+    StudentList,
+    User,
+    Course,
+    Coursework,
+    Assignment,
+    AssignmentStatus,
+    UploadFile,
+)
 
 
 class UserDisplay(admin.ModelAdmin):
@@ -10,35 +18,22 @@ class UserDisplay(admin.ModelAdmin):
         "first_name",
         "status",
         "is_staff",
-        "is_email_verified"
+        "is_email_verified",
     )
 
 
 class StudentListAdmin(admin.ModelAdmin):
-    display = (
-        "student_id",
-        "last_name",
-        "first_name"
-    )
+    display = ("student_id", "last_name", "first_name")
     list_display = display
     search_fields = display
 
 
 class AssignmentAdmin(admin.ModelAdmin):
-    list_display = (
-        "title",
-        "coursework",
-        "created_on",
-        "deadline"
-    )
+    list_display = ("title", "coursework", "created_on", "deadline")
 
 
 class AssignmentStatusAdmin(admin.ModelAdmin):
-    list_display = (
-        "assignment",
-        "student",
-        "memo"
-    )
+    list_display = ("assignment", "student", "memo")
 
 
 admin.site.register(StudentList, StudentListAdmin)

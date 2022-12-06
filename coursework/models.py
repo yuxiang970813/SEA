@@ -6,12 +6,8 @@ import os
 
 class StudentList(models.Model):
     student_id = models.IntegerField()
-    first_name = models.CharField(
-        max_length=18
-    )
-    last_name = models.CharField(
-        max_length=18
-    )
+    first_name = models.CharField(max_length=18)
+    last_name = models.CharField(max_length=18)
 
     def __str__(self):
         return f"{self.last_name}{self.first_name}-{self.student_id}"
@@ -24,25 +20,17 @@ class User(AbstractUser):
     STATUS = (
         ("Student", "Student"),
         ("Teaching Assistant", "Teaching Assistant"),
-        ("Teacher", "Teacher")
+        ("Teacher", "Teacher"),
     )
-    status = models.CharField(
-        max_length=18,
-        choices=STATUS,
-        default="Student"
-    )
-    is_email_verified = models.BooleanField(
-        default=False
-    )
+    status = models.CharField(max_length=18, choices=STATUS, default="Student")
+    is_email_verified = models.BooleanField(default=False)
 
     class Meta:
         ordering = ["username"]
 
 
 class Course(models.Model):
-    name = models.CharField(
-        max_length=60
-    )
+    name = models.CharField(max_length=60)
 
     def __str__(self):
         return self.name
@@ -53,15 +41,10 @@ class Course(models.Model):
 
 class Coursework(models.Model):
     course = models.OneToOneField(
-        Course,
-        on_delete=models.PROTECT,
-        unique=True,
-        related_name="coursework_name"
+        Course, on_delete=models.PROTECT, unique=True, related_name="coursework_name"
     )
     taken_person = models.ManyToManyField(
-        User,
-        blank=True,
-        related_name="coursework_taken"
+        User, blank=True, related_name="coursework_taken"
     )
 
     def __str__(self):
@@ -73,16 +56,10 @@ class Coursework(models.Model):
 
 class Assignment(models.Model):
     coursework = models.ForeignKey(
-        Coursework,
-        on_delete=models.PROTECT,
-        related_name="assignment"
+        Coursework, on_delete=models.PROTECT, related_name="assignment"
     )
-    title = models.CharField(
-        max_length=128
-    )
-    created_on = models.DateTimeField(
-        auto_now_add=True
-    )
+    title = models.CharField(max_length=128)
+    created_on = models.DateTimeField(auto_now_add=True)
     deadline = models.DateTimeField()
 
     def __str__(self):
@@ -97,36 +74,23 @@ class Assignment(models.Model):
         return self.deadline - timezone.now()
 
     class Meta:
-        ordering = [
-            "coursework",
-            "-created_on"
-        ]
+        ordering = ["coursework", "-created_on"]
 
 
 class AssignmentStatus(models.Model):
     assignment = models.ForeignKey(
-        Assignment,
-        on_delete=models.PROTECT,
-        related_name="status"
+        Assignment, on_delete=models.PROTECT, related_name="status"
     )
     student = models.ForeignKey(
-        User,
-        on_delete=models.PROTECT,
-        related_name="assignment_student"
+        User, on_delete=models.PROTECT, related_name="assignment_student"
     )
-    memo = models.TextField(
-        blank=True,
-        null=True
-    )
+    memo = models.TextField(blank=True, null=True)
 
     def __str__(self):
         return f"{self.student} upload {self.assignment}"
 
     class Meta:
-        ordering = [
-            "assignment",
-            "student__username"
-        ]
+        ordering = ["assignment", "student__username"]
 
 
 def path_and_rename(instance, filename):
@@ -134,31 +98,24 @@ def path_and_rename(instance, filename):
     assign = instance.assignment
     # Return path and name
     return os.path.join(
-        # Naming path
+        # Path folder name
         "{coursework_name}_{assignment_name}_{date}".format(
             coursework_name=assign.assignment.coursework,
             assignment_name=assign.assignment,
-            date=assign.assignment.deadline.strftime("%Y%m%d")
+            date=assign.assignment.deadline.strftime("%Y%m%d"),
         ),
-        # Naming file according to the sutdent id and file format
+        # Rename file
         "{student_id}.{file_format}".format(
-            student_id=assign.student.username,
-            file_format=filename.split(".")[-1]
-        )
+            student_id=assign.student.username, file_format=filename.split(".")[-1]
+        ),
     )
 
 
 class UploadFile(models.Model):
     assignment = models.ForeignKey(
-        AssignmentStatus,
-        on_delete=models.CASCADE,
-        related_name="upload_file"
+        AssignmentStatus, on_delete=models.CASCADE, related_name="upload_file"
     )
-    file = models.FileField(
-        blank=True,
-        null=True,
-        upload_to=path_and_rename
-    )
+    file = models.FileField(blank=True, null=True, upload_to=path_and_rename)
 
     def __str__(self):
         return f"{self.assignment}({self.file})"
@@ -168,8 +125,4 @@ class UploadFile(models.Model):
         super().delete(*args, **kwargs)
 
     class Meta:
-        ordering = [
-            "assignment",
-            "assignment__student",
-            "file"
-        ]
+        ordering = ["assignment", "assignment__student", "file"]
