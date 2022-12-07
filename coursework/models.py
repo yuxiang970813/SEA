@@ -52,6 +52,22 @@ class Coursework(models.Model):
         ordering = ["course"]
 
 
+class JoinCourseworkRequest(models.Model):
+    student = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name="request_student"
+    )
+    coursework = models.ForeignKey(
+        Coursework, on_delete=models.CASCADE, name="request_coursework"
+    )
+    approve = models.BooleanField(default=False)
+
+    def __str__(self):
+        if self.approve:
+            return f"{self.student} approved join {self.coursework}."
+        else:
+            return f"{self.student} request join {self.coursework}."
+
+
 class Assignment(models.Model):
     coursework = models.ForeignKey(
         Coursework, on_delete=models.PROTECT, related_name="assignment"
