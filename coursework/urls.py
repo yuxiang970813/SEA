@@ -39,9 +39,14 @@ urlpatterns = [
         name="view_submit_result",
     ),
     path("assignment/result", views.assignment_result, name="assignment_result"),
-    # API Route
+    # Below are API Route
+    path(
+        "coursework/request/count",
+        views.count_coursework_request,
+        name="count_coursework_request"
+    ),
     path("delete/file", views.delete_file, name="delete_file"),
-    path("edit/memo", views.edit_memo, name="edit_memo"),
+    path("edit/memo", views.edit_memo, name="edit_memo")
 ]
 
 if settings.DEBUG:

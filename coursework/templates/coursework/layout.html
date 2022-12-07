@@ -38,7 +38,8 @@
           {% if user.is_authenticated %}
           <!-- COURSEWORK(DROPDOWN) -->
           <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"
+              id="coursework-dropdown">
               Coursework
             </a>
             <ul class="dropdown-menu dropdown-menu-dark">
@@ -69,11 +70,7 @@
               <li>
                 <a class="dropdown-item" href="{% url 'request_coursework' %}">
                   Coursework Request
-                  {% if coursework_request_count > 0 %}
-                  <span class="badge text-bg-danger">
-                    {{ coursework_request_count }}
-                  </span>
-                  {% endif %}
+                  <span class="badge text-bg-danger" id="request-count" style="font-size:0.55em;"></span>
                 </a>
               </li>
               {% endif %}
@@ -125,6 +122,26 @@
     {% block body %}
     {% endblock %}
   </div>
+  {% if user.status != "Student" %}
+  <script>
+    // Select coursework dropdown menu
+    document.getElementById('coursework-dropdown').addEventListener('click', () => {
+      // Get the count of coursework request
+      fetch('/coursework/request/count')
+        .then((response) => response.json())
+        .then((result) => {
+          // For use later
+          const resultCount = result.request_count;
+          const notification = document.getElementById('request-count');
+          if (resultCount > 0) {
+            notification.innerHTML = resultCount;
+          } else {
+            notification.style.display = 'none';
+          }
+        });
+    })
+  </script>
+  {% endif %}
   <!-- STATIC SCRIPT -->
   <script src="{% static 'coursework/script.js' %}"></script>
   <!-- BOOTSTRAP SCRIPT -->

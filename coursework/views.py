@@ -265,6 +265,19 @@ def request_coursework(request):
         return HttpResponseRedirect(reverse("index"))
 
 
+# API
+@csrf_exempt
+@login_required
+def count_coursework_request(request):
+    if request.method == "GET":
+        return JsonResponse(
+            {"request_count": int(
+                JoinCourseworkRequest.objects.all().count()
+            )},
+            status=201
+        )
+
+
 @login_required
 def coursework_view(request, coursework_id):
     # For user later
@@ -366,7 +379,7 @@ def delete_file(request):
     # Delete file and return message
     try:
         file.delete()
-        return JsonResponse({"message": "Delete successfully!"}, status=200)
+        return JsonResponse({"message": "Delete successfully!"}, status=201)
     except:
         return JsonResponse({"error": "Delete failed!"}, status=400)
 
@@ -417,7 +430,7 @@ def edit_memo(request):
     try:
         assignment_status.memo = new_memo
         assignment_status.save()
-        return JsonResponse({"message": "Edit successfully!"}, status=200)
+        return JsonResponse({"message": "Edit successfully!"}, status=201)
     except:
         return JsonResponse({"error": "Edit failed!"}, status=400)
 
