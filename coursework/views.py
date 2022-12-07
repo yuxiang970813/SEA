@@ -69,7 +69,7 @@ def activate_user(request, uidb64, token):
         # Make email verified, info and redirect user to login page
         user.is_email_verified = True
         user.save()
-        messages.success(request, "Email verified, you can now login")
+        messages.success(request, "Email verified, you can now login!")
         return HttpResponseRedirect(reverse("login"))
     # User doesn't exist or token doen't match
     else:
@@ -101,7 +101,7 @@ def login_view(request):
             else:
                 send_activate_email(request, user)
                 messages.info(
-                    request, "Email is not verified, please check your mail box."
+                    request, f"Email is not verified, please check your mail box(<strong>{user.email}</strong>)."
                 )
                 return HttpResponseRedirect(reverse("login"))
     # User visit login page
@@ -168,7 +168,9 @@ def create_coursework(request):
                 new_coursework.save()
                 new_coursework.taken_person.add(request.user)
                 # Redirect to index after create
-                messages.success(request, "Coursework created successfully")
+                messages.success(
+                    request, "Coursework <strong>{new_coursework}</strong> created successfully"
+                )
                 return HttpResponseRedirect(
                     reverse("coursework_view", args=(new_coursework.id,))
                 )
@@ -183,7 +185,7 @@ def create_coursework(request):
             })
     # Redirect non-teacher person to index
     else:
-        messages.error(request, "Only teacher can create coursework")
+        messages.error(request, "Only teacher can create coursework!")
         return HttpResponseRedirect(reverse("index"))
 
 
@@ -197,18 +199,28 @@ def join_coursework(request):
         taken_person = coursework.taken_person
         # Remind user if already join coursework
         if user in taken_person.all():
-            messages.warning(request, "Already joined coursework!")
+            messages.warning(
+                request, "You have already joined coursework <strong>{coursework}</strong>!"
+            )
             return HttpResponseRedirect(reverse("join_coursework"))
         # Join user to coursework
         else:
-            taken_person.add(user)
-            messages.success(request, "Join coursework successfully")
-            return HttpResponseRedirect(reverse("coursework_view", args=(coursework.id,)))
+            JoinCourseworkRequest.objects.create(
+                student=user, coursework=coursework
+            ).save()
+            messages.info(
+                request, "You have requested to join coursework <strong>{coursework}</strong>, please wait patiently for the TA to approve your request.")
+            return HttpResponseRedirect(reverse("index"))
     # User visit join coursework page
     else:
         return render(request, "coursework/join_coursework.html", {
             "courseworks": Coursework.objects.all()
         })
+
+
+@login_required
+def approve_join_request(request):
+    pass
 
 
 @login_required

@@ -49,15 +49,27 @@
                 </a>
               </li>
               {% empty %}
-              <li><a class="dropdown-item disabled">No Coursework Available</a></li>
+              <li>
+                <a class="dropdown-item disabled">
+                  No Coursework Available
+                </a>
+              </li>
               {% endfor %}
               <li>
                 <hr class="dropdown-divider">
               </li>
               {% if user.status == "Teacher" %}
-              <li><a class="dropdown-item" href="{% url 'create_coursework' %}">Create Coursework</a></li>
+              <li>
+                <a class="dropdown-item" href="{% url 'create_coursework' %}">
+                  Create Coursework
+                </a>
+              </li>
               {% else %}
-              <li><a class="dropdown-item" href="{% url 'join_coursework' %}">Join Coursework</a></li>
+              <li>
+                <a class="dropdown-item" href="{% url 'join_coursework' %}">
+                  Join Coursework
+                </a>
+              </li>
               {% endif %}
             </ul>
           </li>
@@ -78,9 +90,16 @@
           </li>
           {% else %}
           <!-- REGISTER -->
-          <li class="nav-item"><a class="nav-link" href="{% url 'register' %}">Register</a></li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'register' %}">
+              Register
+            </a>
+          </li>
           <!-- LOGIN -->
-          <li class="nav-item"><a class="nav-link" href="{% url 'login' %}">Login</a></li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'login' %}">
+              Login</a>
+          </li>
           {% endif %}
         </ul>
       </div>
