@@ -1,3 +1,4 @@
 .env
 venv
 media
+coursework/__pycache__
