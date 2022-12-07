@@ -13,7 +13,9 @@ urlpatterns = [
     path("coursework/create", views.create_coursework, name="create_coursework"),
     path("coursework/join", views.join_coursework, name="join_coursework"),
     path(
-        "coursework/<int:coursework_id>", views.coursework_view, name="coursework_view"
+        "coursework/<int:coursework_id>",
+        views.coursework_view,
+        name="coursework_view"
     ),
     path(
         "coursework/<int:coursework_id>/assignment/create",
@@ -42,4 +44,6 @@ urlpatterns = [
 ]
 
 if settings.DEBUG:
-    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    urlpatterns += static(
+        settings.MEDIA_URL, document_root=settings.MEDIA_ROOT
+    )

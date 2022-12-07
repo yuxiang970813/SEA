@@ -32,8 +32,7 @@ class User(AbstractUser):
 class Course(models.Model):
     name = models.CharField(max_length=60)
 
-    def __str__(self):
-        return self.name
+    def __str__(self): return self.name
 
     class Meta:
         ordering = ["name"]
@@ -47,8 +46,7 @@ class Coursework(models.Model):
         User, blank=True, related_name="coursework_taken"
     )
 
-    def __str__(self):
-        return self.course.name
+    def __str__(self): return self.course.name
 
     class Meta:
         ordering = ["course"]
@@ -63,16 +61,13 @@ class Assignment(models.Model):
     deadline = models.DateTimeField()
     result_zip_file = models.FileField(null=True, blank=True)
 
-    def __str__(self):
-        return self.title
+    def __str__(self): return self.title
 
     @property
-    def is_expired(self):
-        return timezone.now() > self.deadline
+    def is_expired(self): return timezone.now() > self.deadline
 
     @property
-    def remain_time(self):
-        return self.deadline - timezone.now()
+    def remain_time(self): return self.deadline - timezone.now()
 
     class Meta:
         ordering = ["coursework", "-created_on"]
@@ -87,8 +82,7 @@ class AssignmentStatus(models.Model):
     )
     memo = models.TextField(blank=True, null=True)
 
-    def __str__(self):
-        return f"{self.student} upload {self.assignment}"
+    def __str__(self): return f"{self.student} upload {self.assignment}"
 
     class Meta:
         ordering = ["assignment", "student__username"]
@@ -100,7 +94,7 @@ def path_and_rename(instance, filename):
     # Return path and name
     return os.path.join(
         f"{assign.assignment.coursework}_{assign.assignment}_{assign.assignment.deadline.strftime('%Y%m%d')}",
-        f"{assign.student.username}.{filename.split('.')[-1]}",
+        f"{assign.student.username}.{filename.split('.')[-1]}"
     )
 
 
@@ -110,8 +104,7 @@ class UploadFile(models.Model):
     )
     file = models.FileField(blank=True, null=True, upload_to=path_and_rename)
 
-    def __str__(self):
-        return f"{self.assignment}({self.file})"
+    def __str__(self): return f"{self.assignment}({self.file})"
 
     def delete(self, *args, **kwargs):
         self.file.delete()

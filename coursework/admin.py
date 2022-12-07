@@ -1,24 +1,10 @@
 from django.contrib import admin
-from .models import (
-    StudentList,
-    User,
-    Course,
-    Coursework,
-    Assignment,
-    AssignmentStatus,
-    UploadFile,
-)
+from .models import StudentList, User, Course, Coursework, Assignment, AssignmentStatus, UploadFile
 
 
 class UserDisplay(admin.ModelAdmin):
     list_display = (
-        "username",
-        "email",
-        "last_name",
-        "first_name",
-        "status",
-        "is_staff",
-        "is_email_verified",
+        "username", "email", "last_name", "first_name", "status", "is_staff", "is_email_verified"
     )
 
 
