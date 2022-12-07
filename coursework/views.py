@@ -15,7 +15,7 @@ from django.core.files import File
 from django.conf import settings
 from django.urls import reverse
 from .utils import generate_token
-from .models import StudentList, User, Course, Coursework, Assignment, AssignmentStatus, UploadFile
+from .models import StudentList, User, Course, Coursework, Assignment, AssignmentStatus, UploadFile, JoinCourseworkRequest
 from zipfile import ZipFile, ZIP_DEFLATED
 from pathlib import Path
 import threading

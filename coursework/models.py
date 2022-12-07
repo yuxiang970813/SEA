@@ -57,7 +57,7 @@ class JoinCourseworkRequest(models.Model):
         User, on_delete=models.CASCADE, related_name="request_student"
     )
     coursework = models.ForeignKey(
-        Coursework, on_delete=models.CASCADE, name="request_coursework"
+        Coursework, on_delete=models.CASCADE, related_name="request_coursework"
     )
     approve = models.BooleanField(default=False)
 
