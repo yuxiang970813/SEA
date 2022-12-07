@@ -1,4 +1,6 @@
 .env
 venv
 media
+SEA/__pycache__
 coursework/__pycache__
+coursework/migrations/__pycache__
