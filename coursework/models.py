@@ -67,6 +67,9 @@ class JoinCourseworkRequest(models.Model):
         else:
             return f"{self.student} request join {self.coursework}."
 
+    class Meta:
+        ordering = ["approve", "student", "coursework"]
+
 
 class Assignment(models.Model):
     coursework = models.ForeignKey(

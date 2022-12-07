@@ -1,6 +1,7 @@
 {% extends "coursework/layout.html" %}
 
 {% block body %}
+<!-- TITLE -->
 <h1>
   <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" fill="currentColor" class="bi bi-journal-bookmark"
     viewBox="0 0 16 16">
@@ -13,6 +14,7 @@
   </svg>
   Assignment
 </h1>
+<!-- CONTENT -->
 <table class="table table-dark table-striped table-hover table-borderless">
   <thead>
     <tr>
@@ -44,7 +46,7 @@
         {% endif %}
       </td>
       <td class="text-center">
-      {% if assignment.is_expired %}
+        {% if assignment.is_expired %}
         {% if user.status == "Student" %}
         <a href="{% url 'view_submit_result' assignment.coursework.id assignment.id %}"
           class="btn btn-success btn-sm fw-bold">
@@ -60,12 +62,12 @@
           </button>
         </form>
         {% endif %}
-      {% else %}
+        {% else %}
         <a href="{% url 'submit_assignment' assignment.coursework.id assignment.id %}"
           class="btn btn-primary btn-sm fw-bold">
           Submit
         </a>
-      {% endif %}
+        {% endif %}
       </td>
     </tr>
     {% empty %}

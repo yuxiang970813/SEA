@@ -26,7 +26,8 @@ import os
 @login_required
 def index(request):
     return render(request, "coursework/index.html", {
-        "assignments": Assignment.objects.filter(coursework__taken_person=request.user)
+        "assignments": Assignment.objects.filter(coursework__taken_person=request.user),
+        "coursework_request_count": JoinCourseworkRequest.objects.filter(approve=False).count()
     })
 
 
@@ -104,7 +105,7 @@ def login_view(request):
                     request, f"Email is not verified, please check your mail box(<strong>{user.email}</strong>)."
                 )
                 return HttpResponseRedirect(reverse("login"))
-    # User visit login page
+    # User access login page
     else:
         return render(request, "coursework/login.html")
 
@@ -149,7 +150,7 @@ def register(request):
         # Redirect to login page after register successfully
         messages.success(request, "Account created successfully!")
         return HttpResponseRedirect(reverse("login"))
-    # User visit register page
+    # User access register page
     else:
         return render(request, "coursework/register.html")
 
@@ -169,7 +170,7 @@ def create_coursework(request):
                 new_coursework.taken_person.add(request.user)
                 # Redirect to index after create
                 messages.success(
-                    request, "Coursework <strong>{new_coursework}</strong> created successfully"
+                    request, f"Coursework <strong>{new_coursework}</strong> created successfully"
                 )
                 return HttpResponseRedirect(
                     reverse("coursework_view", args=(new_coursework.id,))
@@ -178,7 +179,7 @@ def create_coursework(request):
             except IntegrityError:
                 messages.warning(request, "Coursework already exists!")
                 return HttpResponseRedirect(reverse("create_coursework"))
-        # Teacher visit create coursework page
+        # Teacher access create coursework page
         else:
             return render(request, "coursework/create_coursework.html", {
                 "courses": Course.objects.all()
@@ -200,7 +201,7 @@ def join_coursework(request):
         # Remind user if already join coursework
         if user in taken_person.all():
             messages.warning(
-                request, "You have already joined coursework <strong>{coursework}</strong>!"
+                request, f"You have already joined coursework <strong>{coursework}</strong>!"
             )
             return HttpResponseRedirect(reverse("join_coursework"))
         # Join user to coursework
@@ -209,9 +210,9 @@ def join_coursework(request):
                 student=user, coursework=coursework
             ).save()
             messages.info(
-                request, "You have requested to join coursework <strong>{coursework}</strong>, please wait patiently for the TA to approve your request.")
+                request, f"You have requested to join coursework <strong>{coursework}</strong>, please wait patiently for the TA to approve your request.")
             return HttpResponseRedirect(reverse("index"))
-    # User visit join coursework page
+    # User access join coursework page
     else:
         return render(request, "coursework/join_coursework.html", {
             "courseworks": Coursework.objects.all()
@@ -219,8 +220,20 @@ def join_coursework(request):
 
 
 @login_required
-def approve_join_request(request):
-    pass
+def approve_request(request):
+    # Only TA & teacher can access this page
+    if request.user.status != "Student":
+        if request.method == "POST":
+            return HttpResponse("Test")
+        # User access approve request page
+        else:
+            return render(request, "coursework/approve_request.html", {
+                "coursework_requests": JoinCourseworkRequest.objects.filter(approve=False)
+            })
+    # Prevent student access
+    else:
+        messages.warning(request, "You have not permission!")
+        return HttpResponseRedirect(reverse("index"))
 
 
 @login_required
@@ -261,7 +274,7 @@ def create_assignment(request, coursework_id):
                     request, "Failure to create assignment, please try again!"
                 )
             return HttpResponseRedirect(reverse("coursework_view", args=(coursework_id,)))
-        # User visit create assignment page
+        # User access create assignment page
         else:
             return render(request, "coursework/create_assignment.html", {
                 "coursework": Coursework.objects.get(pk=int(coursework_id))
@@ -295,7 +308,7 @@ def submit_assignment(request, coursework_id, assignment_id):
             assignment_status = AssignmentStatus.objects.create(
                 assignment=assignment, student=user
             )
-        # User visit manage file page
+        # User access manage file page
         if request.method == "GET":
             return render(request, "coursework/submit_assignment.html", {
                 "assignment_status": assignment_status,

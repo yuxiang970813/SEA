@@ -64,7 +64,20 @@
                   Create Coursework
                 </a>
               </li>
-              {% else %}
+              {% endif %}
+              {% if user.status != "Student" %}
+              <li>
+                <a class="dropdown-item" href="{% url 'approve_request' %}">
+                  Approve Request
+                  {% if coursework_request_count > 0 %}
+                  <span class="badge text-bg-danger">
+                    {{ coursework_request_count }}
+                  </span>
+                  {% endif %}
+                </a>
+              </li>
+              {% endif %}
+              {% if user.status != "Teacher" %}
               <li>
                 <a class="dropdown-item" href="{% url 'join_coursework' %}">
                   Join Coursework
@@ -98,7 +111,8 @@
           <!-- LOGIN -->
           <li class="nav-item">
             <a class="nav-link" href="{% url 'login' %}">
-              Login</a>
+              Login
+            </a>
           </li>
           {% endif %}
         </ul>
