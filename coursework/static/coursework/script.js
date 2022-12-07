@@ -46,6 +46,10 @@ function editMemo(assignmentStatusId) {
         });
 }
 
+function declineRequest(courseworkRequestId) {
+    console.log(`Decline ${courseworkRequestId}`);
+}
+
 document.addEventListener('DOMContentLoaded', () => {
     // Bootstrap client side validation function
     (function () {

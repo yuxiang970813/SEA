@@ -12,9 +12,9 @@
     <path
       d="M7 5.5a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5zm-1.496-.854a.5.5 0 0 1 0 .708l-1.5 1.5a.5.5 0 0 1-.708 0l-.5-.5a.5.5 0 1 1 .708-.708l.146.147 1.146-1.147a.5.5 0 0 1 .708 0zM7 9.5a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5zm-1.496-.854a.5.5 0 0 1 0 .708l-1.5 1.5a.5.5 0 0 1-.708 0l-.5-.5a.5.5 0 0 1 .708-.708l.146.147 1.146-1.147a.5.5 0 0 1 .708 0z" />
   </svg>
-  Assignment
+  Coursework Request
 </h1>
-<!-- CONTENT -->
+<!-- TABLE -->
 <table class="table table-dark table-striped table-hover table-borderless">
   <thead>
     <tr>
@@ -32,15 +32,13 @@
       </td>
       <td>{{ coursework_request.coursework }}</td>
       <td class="text-center">
-        <form action="{% url 'approve_request' %}" method="post">
+        <form action="{% url 'request_coursework' %}" method="post">
           {% csrf_token %}
-          <input type="hidden" name="student-id" value="{{ coursework_request.student.id }}">
-          <input type="hidden" name="coursework-id" value="{{ coursework_request.coursework.id }}">
-          <input type="hidden" id="coursework-request-{{ coursework_request.id }}" name="request-action">
-          <button type="submit" class="btn btn-success btn-sm fw-bold">
+          <input type="hidden" name="request-id" value="{{ coursework_request.id }}">
+          <button type="submit" class="btn btn-success btn-sm fw-bold" name="request-action" value="Accept">
             Accept
           </button>
-          <button type="submit" class="btn btn-danger btn-sm fw-bold">
+          <button type="submit" class="btn btn-danger btn-sm fw-bold" name="request-action" value="Decline">
             Decline
           </button>
         </form>

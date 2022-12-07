@@ -59,16 +59,11 @@ class JoinCourseworkRequest(models.Model):
     coursework = models.ForeignKey(
         Coursework, on_delete=models.CASCADE, related_name="request_coursework"
     )
-    approve = models.BooleanField(default=False)
 
-    def __str__(self):
-        if self.approve:
-            return f"{self.student} approved join {self.coursework}."
-        else:
-            return f"{self.student} request join {self.coursework}."
+    def __str__(self): return f"{self.student} request join {self.coursework}."
 
     class Meta:
-        ordering = ["approve", "student", "coursework"]
+        ordering = ["student", "coursework"]
 
 
 class Assignment(models.Model):

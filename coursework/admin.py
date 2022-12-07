@@ -23,7 +23,7 @@ class AssignmentStatusAdmin(admin.ModelAdmin):
 
 
 class JoinCourseworkRequestAdmin(admin.ModelAdmin):
-    list_display = ("student", "coursework", "approve")
+    list_display = ("student", "coursework")
 
 
 admin.site.register(StudentList, StudentListAdmin)

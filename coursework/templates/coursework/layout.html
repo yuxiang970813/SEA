@@ -67,8 +67,8 @@
               {% endif %}
               {% if user.status != "Student" %}
               <li>
-                <a class="dropdown-item" href="{% url 'approve_request' %}">
-                  Approve Request
+                <a class="dropdown-item" href="{% url 'request_coursework' %}">
+                  Coursework Request
                   {% if coursework_request_count > 0 %}
                   <span class="badge text-bg-danger">
                     {{ coursework_request_count }}

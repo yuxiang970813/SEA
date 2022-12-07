@@ -27,7 +27,7 @@ import os
 def index(request):
     return render(request, "coursework/index.html", {
         "assignments": Assignment.objects.filter(coursework__taken_person=request.user),
-        "coursework_request_count": JoinCourseworkRequest.objects.filter(approve=False).count()
+        "coursework_request_count": JoinCourseworkRequest.objects.all().count()
     })
 
 
@@ -204,11 +204,18 @@ def join_coursework(request):
                 request, f"You have already joined coursework <strong>{coursework}</strong>!"
             )
             return HttpResponseRedirect(reverse("join_coursework"))
-        # Join user to coursework
+        # User request join coursework
         else:
-            JoinCourseworkRequest.objects.create(
-                student=user, coursework=coursework
-            ).save()
+            # Try query for request
+            try:
+                JoinCourseworkRequest.objects.get(
+                    student=user, coursework=coursework
+                )
+            # User 1st time request
+            except JoinCourseworkRequest.DoesNotExist:
+                JoinCourseworkRequest.objects.create(
+                    student=user, coursework=coursework
+                ).save()
             messages.info(
                 request, f"You have requested to join coursework <strong>{coursework}</strong>, please wait patiently for the TA to approve your request.")
             return HttpResponseRedirect(reverse("index"))
@@ -220,15 +227,37 @@ def join_coursework(request):
 
 
 @login_required
-def approve_request(request):
+def request_coursework(request):
     # Only TA & teacher can access this page
     if request.user.status != "Student":
         if request.method == "POST":
-            return HttpResponse("Test")
+            # For use later
+            request_coursework = JoinCourseworkRequest.objects.get(
+                pk=request.POST["request-id"]
+            )
+            student = request_coursework.student
+            student_name = f"{student.last_name}{student.first_name}({student.username})"
+            coursework_name = request_coursework.coursework.__str__()
+            # Accept request
+            if request.POST["request-action"] == "Accept":
+                # Add student to coursework
+                request_coursework.coursework.taken_person.add(student)
+                # Delete request
+                request_coursework.delete()
+                messages.success(
+                    request, f"Accept <strong>{student_name}</strong>'s request to join <strong>{coursework_name}</strong>."
+                )
+            # Decline request
+            else:
+                request_coursework.delete()
+                messages.warning(
+                    request, f"Decline <strong>{student_name}</strong>'s request to join <strong>{coursework_name}</strong>."
+                )
+            return HttpResponseRedirect(reverse("request_coursework"))
         # User access approve request page
         else:
-            return render(request, "coursework/approve_request.html", {
-                "coursework_requests": JoinCourseworkRequest.objects.filter(approve=False)
+            return render(request, "coursework/request_coursework.html", {
+                "coursework_requests": JoinCourseworkRequest.objects.all()
             })
     # Prevent student access
     else:
