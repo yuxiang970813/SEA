@@ -46,6 +46,19 @@ function editMemo(assignmentStatusId) {
         });
 }
 
+function formSubmit(event) {
+    // Prevent submit this form first
+    console.log('Fuck');
+    event.preventDefault();
+    // Put file data into form
+    const formData = new FormData();
+    formData.append('file', document.getElementById('upload-file').files[0]);
+    //
+    const xhr = new XMLHttpRequest();
+    xhr.open('POST', '/form/upload', true);
+    xhr.send(formData);
+}
+
 function declineRequest(courseworkRequestId) {
     console.log(`Decline ${courseworkRequestId}`);
 }

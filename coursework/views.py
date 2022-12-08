@@ -26,8 +26,7 @@ import os
 @login_required
 def index(request):
     return render(request, "coursework/index.html", {
-        "assignments": Assignment.objects.filter(coursework__taken_person=request.user),
-        "coursework_request_count": JoinCourseworkRequest.objects.all().count()
+        "assignments": Assignment.objects.filter(coursework__taken_person=request.user)
     })
 
 
@@ -405,6 +404,15 @@ def upload_file(request, coursework_id, assignment_id):
     else:
         messages.error(request, "Something went wrong!")
         return HttpResponseRedirect(reverse("index"))
+
+
+# API
+@csrf_exempt
+@login_required
+def upload_form(request):
+    print(request.POST)
+    print(request.FILES)
+    return HttpResponse("TEST")
 
 
 # API

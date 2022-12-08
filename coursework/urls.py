@@ -46,7 +46,8 @@ urlpatterns = [
         name="count_coursework_request"
     ),
     path("delete/file", views.delete_file, name="delete_file"),
-    path("edit/memo", views.edit_memo, name="edit_memo")
+    path("edit/memo", views.edit_memo, name="edit_memo"),
+    path("form/upload", views.upload_form, name="upload_form")
 ]
 
 if settings.DEBUG:

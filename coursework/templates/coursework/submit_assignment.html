@@ -32,7 +32,9 @@
               <table class="table table-sm">
                 <thead>
                   <tr>
-                    <th scope="col" colspan="3">Uploaded File(s)</th>
+                    <th scope="col" colspan="3">
+                      Uploaded File(s)
+                    </th>
                   </tr>
                 </thead>
                 <tbody>
@@ -50,26 +52,21 @@
                     </td>
                   </tr>
                   {% endfor %}
-                  <!-- <tr>
-                    <td>
-                      <div class="progress">
-                        <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar"
-                          aria-label="Animated striped example" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100"
-                          id="progress-bar" style="width: 75%">
-                        </div>
-                      </div>
-                    </td>
-                  </tr> -->
                   <tr>
                     <td colspan="2" class="text-center">
-                      <form
-                        action="{% url 'upload_file' assignment_status.assignment.coursework.id assignment_status.assignment.id %}"
-                        method="post" enctype="multipart/form-data">
+                      <form method="post" enctype="multipart/form-data"
+                        action="{% url 'upload_file' assignment_status.assignment.coursework.id assignment_status.assignment.id %}">
                         {% csrf_token %}
                         <input type="file" name="file-for-upload" id="upload-file" style="display: none;"
-                          onchange="this.form.submit()">
-                        <label for="upload-file" class="fw-bold fs-5" id="label-upload">+</label>
+                          onchange="formSubmit(event)">
+                        <label for="upload-file" class="fw-bold fs-5" id="label-upload">
+                          +
+                        </label>
                       </form>
+                      <div class="progress" id="progress-area">
+                        <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar"
+                          aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width: 75%"></div>
+                      </div>
                     </td>
                   </tr>
                 </tbody>
@@ -78,11 +75,15 @@
               <div class="form-floating mb-3">
                 <textarea class="form-control" id="edit-memo" name="memo" style="height: 100px; resize: none"
                   placeholder="Memo">{{ assignment_status.memo }}</textarea>
-                <label for="edit-memo">Memo</label>
+                <label for="edit-memo">
+                  Memo
+                </label>
               </div>
               <!-- EDIT BUTTON -->
               <div class="text-center mt-3">
-                <button class="btn btn-secondary" onclick="editMemo('{{ assignment_status.id }}')">Save</button>
+                <button class="btn btn-secondary" onclick="editMemo('{{ assignment_status.id }}')">
+                  Save
+                </button>
               </div>
             </div>
           </div>
@@ -92,17 +93,4 @@
   </div>
   </div>
 </section>
-<!-- PROGRESS BAR SCRIPT -->
-<!-- <script>
-  const progressFile = document.getElementById('upload-file');
-  const uploadButton = document.getElementById('label-upload');
-  const progressBar = document.getElementById('progress-bar');
-
-  progressFile.addEventListener('change', () => {
-    const uploadFile = progressFile.files[0];
-    const req = new XMLHttpRequest();
-  })
-
-
-</script> -->
 {% endblock %}

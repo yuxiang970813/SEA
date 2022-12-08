@@ -25,7 +25,8 @@
             <!-- ERROR MESSAGE -->
             <div class="mb-3">
               <label for="disabledTextInput" class="form-label"></label>
-              <input type="text" id="disabledTextInput" class="form-control" value="You didn't submit this assignment!" disabled>
+              <input type="text" id="disabledTextInput" class="form-control" value="You didn't submit this assignment!"
+                disabled>
             </div>
             {% else %}
             <!-- ICON -->
@@ -51,7 +52,9 @@
               <table class="table table-sm">
                 <thead>
                   <tr>
-                    <th scope="col">Uploaded File(s)</th>
+                    <th scope="col">
+                      Uploaded File(s)
+                    </th>
                   </tr>
                 </thead>
                 <tbody>
@@ -73,8 +76,12 @@
               <!-- MEMO -->
               <div class="form-floating mb-3">
                 <textarea class="form-control" id="edit-memo" name="memo" style="height: 100px; resize: none"
-                  placeholder="Memo" disabled>{{ assignment_status.memo }}</textarea>
-                <label for="edit-memo">Memo</label>
+                  placeholder="Memo" disabled>
+                  {{ assignment_status.memo }}
+                </textarea>
+                <label for="edit-memo">
+                  Memo
+                </label>
               </div>
             </div>
             {% endif %}

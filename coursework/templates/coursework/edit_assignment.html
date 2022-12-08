@@ -28,18 +28,24 @@
               <!-- ASSIGNMENT -->
               <div class="mb-3">
                 <label for="disabledTextInput" class="form-label"></label>
-                <input type="text" id="disabledTextInput" class="form-control" value="{{ assignment_status.assignment }}"
-                  disabled>
+                <input type="text" id="disabledTextInput" class="form-control"
+                  value="{{ assignment_status.assignment }}" disabled>
               </div>
               <!-- MEMO -->
               <div class="form-floating mb-3">
                 <textarea class="form-control" id="floatingTextarea2" name="memo" style="height: 100px; resize: none"
-                  placeholder="Memo" autofocus>{{ assignment_status.memo }}</textarea>
-                <label for="floatingTextarea2">Memo</label>
+                  placeholder="Memo" autofocus>
+                  {{ assignment_status.memo }}
+                </textarea>
+                <label for="floatingTextarea2">
+                  Memo
+                </label>
               </div>
               <!-- EDIT BUTTON -->
               <div class="text-center mt-3">
-                <button type="submit" class="btn btn-secondary">Edit Memo</button>
+                <button type="submit" class="btn btn-secondary">
+                  Edit Memo
+                </button>
               </div>
             </form>
           </div>
