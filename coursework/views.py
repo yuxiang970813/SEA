@@ -383,41 +383,32 @@ def delete_file(request):
         return JsonResponse({"error": "Delete failed!"}, status=400)
 
 
+
+# API
+@csrf_exempt
 @login_required
-def upload_file(request, coursework_id, assignment_id):
-    # For user later
-    user = request.user
-    assignment = Assignment.objects.get(pk=int(assignment_id))
-    # Make sure user have join coursework and request via post method
-    if user_in_coursework(user, coursework_id, assignment) and request.method == "POST":
-        # User upload file
+def upload_file(request):
+    # Upload file must be via POST
+    if request.method != "POST":
+        return JsonResponse({"error": "POST request required."}, status=400)
+    # Query for the assignment status
+    try:
         assignment_status = AssignmentStatus.objects.get(
-            assignment=assignment, student=user
+            assignment=Assignment.objects.get(pk=request.POST["assignmentId"]),
+            student=User.objects.get(pk=request.POST["studentId"])
         )
-        # Upload file
+        # Upload file if find status
         UploadFile.objects.create(
-            assignment=assignment_status, file=request.FILES["file-for-upload"]
+            assignment=assignment_status, file=request.FILES["file"]
         ).save()
-        messages.success(request, "Upload successfully")
-        return HttpResponseRedirect(reverse("submit_assignment", args=(coursework_id, assignment_id)))
-    # Remind & redirect to index if user haven't join coursework or request via get method
-    else:
-        messages.error(request, "Something went wrong!")
-        return HttpResponseRedirect(reverse("index"))
+        return JsonResponse({"message": "Upload successfully!"}, status=201)
+    except AssignmentStatus.DoesNotExist:
+        return JsonResponse({"error": "Something went wrong!"}, status=400)
 
 
 # API
-@csrf_exempt
-@login_required
-def upload_form(request):
-    print(request.POST)
-    print(request.FILES)
-    return HttpResponse("TEST")
-
-
-# API
-@csrf_exempt
-@login_required
+@ csrf_exempt
+@ login_required
 def edit_memo(request):
     # Edit memo must be via POST
     if request.method != "POST":

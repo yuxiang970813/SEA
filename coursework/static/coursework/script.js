@@ -46,17 +46,40 @@ function editMemo(assignmentStatusId) {
         });
 }
 
-function formSubmit(event) {
-    // Prevent submit this form first
-    console.log('Fuck');
-    event.preventDefault();
-    // Put file data into form
+function formSubmit() {
+    // For use later
+    const addButton = document.getElementById('label-upload');
+    const spinner = document.getElementById('spinner');
+    // Hide add button & show spinner
+    addButton.classList.add('d-none');
+    spinner.classList.remove('d-none');
+    // Create form and add data in it
     const formData = new FormData();
+    formData.append('studentId', document.getElementById('student-id').value);
+    formData.append(
+        'assignmentId',
+        document.getElementById('assignment-id').value
+    );
     formData.append('file', document.getElementById('upload-file').files[0]);
-    //
-    const xhr = new XMLHttpRequest();
-    xhr.open('POST', '/form/upload', true);
-    xhr.send(formData);
+    // Request upload file
+    fetch('/upload/file', {
+        method: 'POST',
+        body: formData,
+    })
+        .then((response) => response.json())
+        .then((result) => {
+            // Show add button & hide spinner
+            addButton.classList.remove('d-none');
+            spinner.classList.add('d-none');
+            // Alert result
+            if (result.error) {
+                alert(result.error);
+            } else if (result.message) {
+                alert(result.message);
+            }
+            // Refresh page
+            location.reload();
+        });
 }
 
 function declineRequest(courseworkRequestId) {

@@ -29,11 +29,6 @@ urlpatterns = [
         name="submit_assignment",
     ),
     path(
-        "coursework/<int:coursework_id>/assignment/<int:assignment_id>/upload",
-        views.upload_file,
-        name="upload_file",
-    ),
-    path(
         "coursework/<int:coursework_id>/assignment/<int:assignment_id>/view",
         views.view_submit_result,
         name="view_submit_result",
@@ -47,7 +42,7 @@ urlpatterns = [
     ),
     path("delete/file", views.delete_file, name="delete_file"),
     path("edit/memo", views.edit_memo, name="edit_memo"),
-    path("form/upload", views.upload_form, name="upload_form")
+    path("upload/file", views.upload_file, name="upload_file")
 ]
 
 if settings.DEBUG:
