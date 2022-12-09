@@ -10,6 +10,7 @@ urlpatterns = [
     path("logout", views.logout_view, name="logout"),
     path("register", views.register, name="register"),
     path("activate/<uidb64>/<token>", views.activate_user, name="activate_user"),
+    path("appoint/TA", views.appoint_TA, name="appoint_TA"),
     path("coursework/create", views.create_coursework, name="create_coursework"),
     path("coursework/join", views.join_coursework, name="join_coursework"),
     path("coursework/request", views.request_coursework, name="request_coursework"),

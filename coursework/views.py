@@ -14,8 +14,8 @@ from django.shortcuts import render
 from django.core.files import File
 from django.conf import settings
 from django.urls import reverse
-from .utils import generate_token
 from .models import StudentList, User, Course, Coursework, Assignment, AssignmentStatus, UploadFile, JoinCourseworkRequest
+from .utils import generate_token
 from zipfile import ZipFile, ZIP_DEFLATED
 from pathlib import Path
 import threading
@@ -152,6 +152,23 @@ def register(request):
     # User access register page
     else:
         return render(request, "coursework/register.html")
+
+
+@login_required
+def appoint_TA(request):
+    # Prevent non-teacher user acces appoint TA page
+    if request.user.status != "Teacher":
+        messages.warning(request, "You have no permission!")
+        return HttpResponseRedirect(reverse("index"))
+    else:
+        # Teacher submit appoint TA form
+        if request.method == "POST":
+            return
+        # Teacher access appoint TA page
+        else:
+            return render(request, "coursework/appoint_TA.html", {
+                "student": User.objects.all()
+            })
 
 
 @login_required
@@ -381,7 +398,6 @@ def delete_file(request):
         return JsonResponse({"message": "Delete successfully!"}, status=201)
     except:
         return JsonResponse({"error": "Delete failed!"}, status=400)
-
 
 
 # API

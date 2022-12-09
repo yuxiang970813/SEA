@@ -90,6 +90,14 @@
               {{ user.last_name }}{{ user.first_name }}
             </a>
             <ul class="dropdown-menu dropdown-menu-dark">
+              {% if user.status == "Teacher" %}
+              <!-- APPOINT TA -->
+              <li>
+                <a class="dropdown-item" href="{% url 'appoint_TA' %}">
+                  Appoint TA
+                </a>
+              </li>
+              {% endif %}
               <!-- LOGOUT -->
               <li>
                 <a class="dropdown-item" href="{% url 'logout' %}">
