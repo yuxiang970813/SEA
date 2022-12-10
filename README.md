@@ -1,11 +1,11 @@
 # SEA Coursework
 
-## Description
+### Description
 
-## Table of Contents
+### Table of Contents
 
-## How to Install and Run the Project
+### How to Install and Run the Project
 
-## How to Use the Project
+### How to Use the Project
 
-## Distinctiveness and Complexity
+### Distinctiveness and Complexity
