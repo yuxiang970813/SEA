@@ -52,19 +52,13 @@
               <table class="table table-sm">
                 <thead>
                   <tr>
-                    <th scope="col">
-                      Uploaded File(s)
-                    </th>
+                    <th scope="col">Uploaded File(s)</th>
                   </tr>
                 </thead>
                 <tbody>
                   {% for file in upload_file.all %}
                   <tr id="uploaded-file-{{ file.id }}">
-                    <td>
-                      <a href="{{ file.file.url }}" class="text-decoration-none">
-                        {{ file.file }}
-                      </a>
-                    </td>
+                    <td><a href="{{ file.file.url }}" class="text-decoration-none">{{ file.file }}</a></td>
                   </tr>
                   {% empty %}
                   <tr>
@@ -76,12 +70,8 @@
               <!-- MEMO -->
               <div class="form-floating mb-3">
                 <textarea class="form-control" id="edit-memo" name="memo" style="height: 100px; resize: none"
-                  placeholder="Memo" disabled>
-                  {{ assignment_status.memo }}
-                </textarea>
-                <label for="edit-memo">
-                  Memo
-                </label>
+                  placeholder="Memo" disabled>{{ assignment_status.memo }}</textarea>
+                <label for="edit-memo">Memo</label>
               </div>
             </div>
             {% endif %}
@@ -89,7 +79,6 @@
         </div>
       </div>
     </div>
-  </div>
   </div>
 </section>
 {% endblock %}

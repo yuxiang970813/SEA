@@ -21,9 +21,8 @@
                   d="M1 5v-.5a.5.5 0 0 1 1 0V5h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1H1zm0 3v-.5a.5.5 0 0 1 1 0V8h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1H1zm0 3v-.5a.5.5 0 0 1 1 0v.5h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1H1z" />
               </svg>
             </div>
-            <form
-              action="{% url 'edit_memo' assignment_status.assignment.coursework.id assignment_status.assignment.id %}"
-              method="post">
+            <form method="post"
+              action="{% url 'edit_memo' assignment_status.assignment.coursework.id assignment_status.assignment.id %}">
               {% csrf_token %}
               <!-- ASSIGNMENT -->
               <div class="mb-3">
@@ -34,19 +33,11 @@
               <!-- MEMO -->
               <div class="form-floating mb-3">
                 <textarea class="form-control" id="floatingTextarea2" name="memo" style="height: 100px; resize: none"
-                  placeholder="Memo" autofocus>
-                  {{ assignment_status.memo }}
-                </textarea>
-                <label for="floatingTextarea2">
-                  Memo
-                </label>
+                  placeholder="Memo" autofocus>{{ assignment_status.memo }}</textarea>
+                <label for="floatingTextarea2">Memo</label>
               </div>
               <!-- EDIT BUTTON -->
-              <div class="text-center mt-3">
-                <button type="submit" class="btn btn-secondary">
-                  Edit Memo
-                </button>
-              </div>
+              <div class="text-center mt-3"><button type="submit" class="btn btn-secondary">Edit Memo</button></div>
             </form>
           </div>
         </div>

@@ -50,21 +50,13 @@
                 </a>
               </li>
               {% empty %}
-              <li>
-                <a class="dropdown-item disabled">
-                  No Coursework Available
-                </a>
-              </li>
+              <li><a class="dropdown-item disabled">No Coursework Available</a></li>
               {% endfor %}
               <li>
                 <hr class="dropdown-divider">
               </li>
               {% if user.status == "Teacher" %}
-              <li>
-                <a class="dropdown-item" href="{% url 'create_coursework' %}">
-                  Create Coursework
-                </a>
-              </li>
+              <li><a class="dropdown-item" href="{% url 'create_coursework' %}">Create Coursework</a></li>
               {% endif %}
               {% if user.status != "Student" %}
               <li>
@@ -75,11 +67,7 @@
               </li>
               {% endif %}
               {% if user.status != "Teacher" %}
-              <li>
-                <a class="dropdown-item" href="{% url 'join_coursework' %}">
-                  Join Coursework
-                </a>
-              </li>
+              <li><a class="dropdown-item" href="{% url 'join_coursework' %}">Join Coursework</a></li>
               {% endif %}
             </ul>
           </li>
@@ -90,35 +78,15 @@
               {{ user.last_name }}{{ user.first_name }}
             </a>
             <ul class="dropdown-menu dropdown-menu-dark">
-              {% if user.status == "Teacher" %}
-              <!-- APPOINT TA -->
-              <li>
-                <a class="dropdown-item" href="{% url 'appoint_TA' %}">
-                  Appoint TA
-                </a>
-              </li>
-              {% endif %}
               <!-- LOGOUT -->
-              <li>
-                <a class="dropdown-item" href="{% url 'logout' %}">
-                  Logout
-                </a>
-              </li>
+              <li><a class="dropdown-item" href="{% url 'logout' %}">Logout</a></li>
             </ul>
           </li>
           {% else %}
           <!-- REGISTER -->
-          <li class="nav-item">
-            <a class="nav-link" href="{% url 'register' %}">
-              Register
-            </a>
-          </li>
+          <li class="nav-item"><a class="nav-link" href="{% url 'register' %}">Register</a></li>
           <!-- LOGIN -->
-          <li class="nav-item">
-            <a class="nav-link" href="{% url 'login' %}">
-              Login
-            </a>
-          </li>
+          <li class="nav-item"><a class="nav-link" href="{% url 'login' %}">Login</a></li>
           {% endif %}
         </ul>
       </div>

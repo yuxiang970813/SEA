@@ -34,18 +34,10 @@
         <table class="table table-dark table-striped table-hover table-borderless">
           <thead>
             <tr>
-              <th scope="col">
-                Student ID
-              </th>
-              <th scope="col" class="text-center">
-                Submit status
-              </th>
-              <th scope="col" class="text-center">
-                Memo
-              </th>
-              <th scope="col" class="text-center">
-                Uploaded file(s)
-              </th>
+              <th scope="col">Student ID</th>
+              <th scope="col" class="text-center">Submit status</th>
+              <th scope="col" class="text-center">Memo</th>
+              <th scope="col" class="text-center">Uploaded file(s)</th>
             </tr>
           </thead>
           <tbody>
@@ -182,9 +174,7 @@
               <source src="{{ file.file.url }}" type="audio/wav">
             </audio>
             {% else %}
-            <a href="{{ file.file.url }}" class="text-decoration-none">
-              {{ file.file }}
-            </a>
+            <a href="{{ file.file.url }}" class="text-decoration-none">{{ file.file }}</a>
             {% endif %}
           </li>
           {% endfor %}
@@ -196,9 +186,7 @@
         {% endfor %}
         {% if assignments.result_zip_file %}
         <div class="text-center">
-          <a href="{{ assignments.result_zip_file.url }}" class="btn btn-secondary">
-            Download all session files
-          </a>
+          <a href="{{ assignments.result_zip_file.url }}" class="btn btn-secondary">Download all session files</a>
         </div>
         {% endif %}
       </div>

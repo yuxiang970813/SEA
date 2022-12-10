@@ -26,8 +26,7 @@ import os
 @login_required
 def index(request):
     return render(request, "coursework/index.html", {
-        "assignments": Assignment.objects.filter(coursework__taken_person=request.user)
-    })
+        "assignments": Assignment.objects.filter(coursework__taken_person=request.user)})
 
 
 class EmailThread(threading.Thread):
@@ -47,11 +46,9 @@ def send_activate_email(request, user):
             "user": user,
             "domain": get_current_site(request),
             "uid": urlsafe_base64_encode(force_bytes(user.pk)),
-            "token": generate_token.make_token(user)
-        }),
+            "token": generate_token.make_token(user)}),
         from_email=settings.EMAIL_FROM_USER,
-        to=[user.email]
-    )
+        to=[user.email])
     # Send email via thread
     EmailThread(email).start()
 
@@ -84,11 +81,14 @@ def login_view(request):
     if request.method == "POST":
         # Try authenticate user
         user = authenticate(
-            request, username=request.POST["student-id"], password=request.POST["password"]
-        )
+            request,
+            username=request.POST["student-id"],
+            password=request.POST["password"])
         # Invalid user
         if user is None:
-            messages.error(request, "Invalid student number and/or password.")
+            messages.error(
+                request,
+                "Invalid student number and/or password.")
             return HttpResponseRedirect(reverse("login"))
         # Valid user
         else:
@@ -101,8 +101,8 @@ def login_view(request):
             else:
                 send_activate_email(request, user)
                 messages.info(
-                    request, f"Email is not verified, please check your mail box(<strong>{user.email}</strong>)."
-                )
+                    request,
+                    f"Email is not verified, please check your mail box(<strong>{user.email}</strong>).")
                 return HttpResponseRedirect(reverse("login"))
     # User access login page
     else:
@@ -137,38 +137,26 @@ def register(request):
         # Try create new user
         try:
             user = User.objects.create_user(
-                student_id, f"{student_id}@itd.tnnua.edu.tw", password
-            )
+                student_id,
+                f"{student_id}@itd.tnnua.edu.tw",
+                password)
             user.first_name = student.first_name
             user.last_name = student.last_name
             user.save()
         # Error if username already taken
         except IntegrityError:
-            messages.error(request, "Student id already taken!")
+            messages.error(
+                request,
+                "Student id already taken!")
             return HttpResponseRedirect(reverse("register"))
         # Redirect to login page after register successfully
-        messages.success(request, "Account created successfully!")
+        messages.success(
+            request,
+            "Account created successfully!")
         return HttpResponseRedirect(reverse("login"))
     # User access register page
     else:
         return render(request, "coursework/register.html")
-
-
-@login_required
-def appoint_TA(request):
-    # Prevent non-teacher user acces appoint TA page
-    if request.user.status != "Teacher":
-        messages.warning(request, "You have no permission!")
-        return HttpResponseRedirect(reverse("index"))
-    else:
-        # Teacher submit appoint TA form
-        if request.method == "POST":
-            return
-        # Teacher access appoint TA page
-        else:
-            return render(request, "coursework/appoint_TA.html", {
-                "student": User.objects.all()
-            })
 
 
 @login_required
@@ -180,17 +168,14 @@ def create_coursework(request):
             # Try create new coursework & add teacher to that coursework
             try:
                 new_coursework = Coursework.objects.create(
-                    course=Course.objects.get(pk=request.POST["course-id"])
-                )
+                    course=Course.objects.get(pk=request.POST["course-id"]))
                 new_coursework.save()
                 new_coursework.taken_person.add(request.user)
                 # Redirect to index after create
                 messages.success(
-                    request, f"Coursework <strong>{new_coursework}</strong> created successfully"
-                )
-                return HttpResponseRedirect(
-                    reverse("coursework_view", args=(new_coursework.id,))
-                )
+                    request,
+                    f"Coursework <strong>{new_coursework}</strong> created successfully")
+                return HttpResponseRedirect(reverse("coursework_view", args=(new_coursework.id,)))
             # Remind if coursework already created
             except IntegrityError:
                 messages.warning(request, "Coursework already exists!")
@@ -198,8 +183,7 @@ def create_coursework(request):
         # Teacher access create coursework page
         else:
             return render(request, "coursework/create_coursework.html", {
-                "courses": Course.objects.all()
-            })
+                "courses": Course.objects.all()})
     # Redirect non-teacher person to index
     else:
         messages.error(request, "Only teacher can create coursework!")
@@ -217,29 +201,30 @@ def join_coursework(request):
         # Remind user if already join coursework
         if user in taken_person.all():
             messages.warning(
-                request, f"You have already joined coursework <strong>{coursework}</strong>!"
-            )
+                request,
+                f"You have already joined coursework <strong>{coursework}</strong>!")
             return HttpResponseRedirect(reverse("join_coursework"))
         # User request join coursework
         else:
             # Try query for request
             try:
                 JoinCourseworkRequest.objects.get(
-                    student=user, coursework=coursework
-                )
+                    student=user,
+                    coursework=coursework)
             # User 1st time request
             except JoinCourseworkRequest.DoesNotExist:
                 JoinCourseworkRequest.objects.create(
-                    student=user, coursework=coursework
+                    student=user,
+                    coursework=coursework
                 ).save()
             messages.info(
-                request, f"You have requested to join coursework <strong>{coursework}</strong>, please wait patiently for the TA to approve your request.")
+                request,
+                f"You have requested to join coursework <strong>{coursework}</strong>, please wait patiently for the TA to approve your request.")
             return HttpResponseRedirect(reverse("index"))
     # User access join coursework page
     else:
         return render(request, "coursework/join_coursework.html", {
-            "courseworks": Coursework.objects.all()
-        })
+            "courseworks": Coursework.objects.all()})
 
 
 @login_required
@@ -249,8 +234,7 @@ def request_coursework(request):
         if request.method == "POST":
             # For use later
             request_coursework = JoinCourseworkRequest.objects.get(
-                pk=request.POST["request-id"]
-            )
+                pk=request.POST["request-id"])
             student = request_coursework.student
             student_name = f"{student.last_name}{student.first_name}({student.username})"
             coursework_name = request_coursework.coursework.__str__()
@@ -261,23 +245,24 @@ def request_coursework(request):
                 # Delete request
                 request_coursework.delete()
                 messages.success(
-                    request, f"Accept <strong>{student_name}</strong>'s request to join <strong>{coursework_name}</strong>."
-                )
+                    request,
+                    f"Accept <strong>{student_name}</strong>'s request to join <strong>{coursework_name}</strong>.")
             # Decline request
             else:
                 request_coursework.delete()
                 messages.warning(
-                    request, f"Decline <strong>{student_name}</strong>'s request to join <strong>{coursework_name}</strong>."
-                )
+                    request,
+                    f"Decline <strong>{student_name}</strong>'s request to join <strong>{coursework_name}</strong>.")
             return HttpResponseRedirect(reverse("request_coursework"))
         # User access approve request page
         else:
             return render(request, "coursework/request_coursework.html", {
-                "coursework_requests": JoinCourseworkRequest.objects.all()
-            })
+                "coursework_requests": JoinCourseworkRequest.objects.all()})
     # Prevent student access
     else:
-        messages.warning(request, "You have not permission!")
+        messages.warning(
+            request,
+            "You have not permission!")
         return HttpResponseRedirect(reverse("index"))
 
 
@@ -286,12 +271,7 @@ def request_coursework(request):
 @login_required
 def count_coursework_request(request):
     if request.method == "GET":
-        return JsonResponse(
-            {"request_count": int(
-                JoinCourseworkRequest.objects.all().count()
-            )},
-            status=201
-        )
+        return JsonResponse({"request_count": int(JoinCourseworkRequest.objects.all().count())}, status=201)
 
 
 @login_required
@@ -301,8 +281,7 @@ def coursework_view(request, coursework_id):
     # Make sure user have join coursework
     if request.user in coursework.taken_person.all():
         return render(request, "coursework/coursework_view.html", {
-            "coursework": coursework
-        })
+            "coursework": coursework})
     # Remind & redirect to index if user haven't join coursework
     else:
         messages.error(request, "You haven't join this coursework!")
@@ -323,30 +302,26 @@ def create_assignment(request, coursework_id):
                 new_assignment = Assignment.objects.create(
                     coursework=Coursework.objects.get(pk=coursework_id),
                     title=request.POST["title"],
-                    deadline=request.POST["datetime"],
-                )
+                    deadline=request.POST["datetime"],)
                 new_assignment.save()
                 messages.success(request, "Assignment created successfully!")
             except:
                 messages.error(
-                    request, "Failure to create assignment, please try again!"
-                )
+                    request,
+                    "Failure to create assignment, please try again!")
             return HttpResponseRedirect(reverse("coursework_view", args=(coursework_id,)))
         # User access create assignment page
         else:
             return render(request, "coursework/create_assignment.html", {
-                "coursework": Coursework.objects.get(pk=int(coursework_id))
-            })
+                "coursework": Coursework.objects.get(pk=int(coursework_id))})
 
 
 def user_in_coursework(user, coursework_id, assignment):
-    """Return boolean, user & assignment must be model object"""
+    """User & assignment must be model object."""
     # For use later
     coursework = Coursework.objects.get(pk=int(coursework_id))
-    if user in coursework.taken_person.all() and assignment.coursework == coursework:
-        return True
-    else:
-        return False
+    # Return boolean
+    return True if user in coursework.taken_person.all() and assignment.coursework == coursework else False
 
 
 @login_required
@@ -359,19 +334,18 @@ def submit_assignment(request, coursework_id, assignment_id):
         # Try get the assignment status
         try:
             assignment_status = AssignmentStatus.objects.get(
-                assignment=assignment, student=user
-            )
+                assignment=assignment,
+                student=user)
         # User 1st time submit
         except AssignmentStatus.DoesNotExist:
             assignment_status = AssignmentStatus.objects.create(
-                assignment=assignment, student=user
-            )
+                assignment=assignment,
+                student=user)
         # User access manage file page
         if request.method == "GET":
             return render(request, "coursework/submit_assignment.html", {
                 "assignment_status": assignment_status,
-                "upload_file": UploadFile.objects.filter(assignment=assignment_status)
-            })
+                "upload_file": UploadFile.objects.filter(assignment=assignment_status)})
     # Remind & redirect to index if user haven't join coursework
     else:
         messages.error(request, "Something went wrong!")
@@ -411,11 +385,11 @@ def upload_file(request):
     try:
         assignment_status = AssignmentStatus.objects.get(
             assignment=Assignment.objects.get(pk=request.POST["assignmentId"]),
-            student=User.objects.get(pk=request.POST["studentId"])
-        )
+            student=User.objects.get(pk=request.POST["studentId"]))
         # Upload file if find status
         UploadFile.objects.create(
-            assignment=assignment_status, file=request.FILES["file"]
+            assignment=assignment_status,
+            file=request.FILES["file"]
         ).save()
         return JsonResponse({"message": "Upload successfully!"}, status=201)
     except AssignmentStatus.DoesNotExist:
@@ -431,14 +405,12 @@ def edit_memo(request):
         return JsonResponse({"error": "POST request required."}, status=400)
     # Get the assignment status id from the api
     assignment_status_id = json.loads(request.body).get(
-        "assignmentStatusId", ""
-    )
+        "assignmentStatusId", "")
     new_memo = json.loads(request.body).get("newMemo", "")
     # Query for request assignment status
     try:
         assignment_status = AssignmentStatus.objects.get(
-            pk=int(assignment_status_id)
-        )
+            pk=int(assignment_status_id))
     except AssignmentStatus.DoesNotExist:
         return JsonResponse({"error": "Assignment status not found."}, status=400)
     # Update memo
@@ -460,16 +432,15 @@ def view_submit_result(request, coursework_id, assignment_id):
         # Try query assignment status
         try:
             assignment_status = AssignmentStatus.objects.get(
-                assignment=assignment, student=user
-            )
+                assignment=assignment,
+                student=user)
         # Set assignment status to None if didn't submit assignment
         except AssignmentStatus.DoesNotExist:
             assignment_status = None
         # Render page
         return render(request, "coursework/view_submit_result.html", {
             "assignment_status": assignment_status,
-            "upload_file": UploadFile.objects.filter(assignment=assignment_status)
-        })
+            "upload_file": UploadFile.objects.filter(assignment=assignment_status)})
     # Showing error message & redirect to index
     else:
         messages.error(request, "Something went wrong!")
@@ -489,7 +460,9 @@ def create_zip_file(assignment):
     # Add that zip file to assignment
     path = Path(zip_file_name)
     with path.open(mode="rb") as result_zip_file:
-        assignment.result_zip_file = File(result_zip_file, name=path.name)
+        assignment.result_zip_file = File(
+            result_zip_file,
+            name=path.name)
         assignment.save()
     # Delete zip file after add to assignment
     os.remove(zip_file_name)
@@ -502,8 +475,7 @@ def assignment_result(request):
         # For use later
         assignment = Assignment.objects.get(pk=request.POST["assignment-id"])
         assignment_status = AssignmentStatus.objects.filter(
-            assignment=assignment
-        )
+            assignment=assignment)
         files = UploadFile.objects.filter(assignment__in=assignment_status)
         # Create result zip file if doesn't exist
         if files and not assignment.result_zip_file:
@@ -523,8 +495,7 @@ def assignment_result(request):
             "assignments": assignment,
             "assignment_status": assignment_status,
             "student_who_submit_memo": student_who_submit_memo,
-            "student_who_upload_file": student_who_upload_file
-        })
+            "student_who_upload_file": student_who_upload_file})
     # Showing error message & redirect to index
     else:
         messages.error(request, "Something went wrong!")

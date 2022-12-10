@@ -32,18 +32,14 @@
               <table class="table table-sm">
                 <thead>
                   <tr>
-                    <th scope="col" colspan="3">
-                      Uploaded File(s)
-                    </th>
+                    <th scope="col" colspan="3">Uploaded File(s)</th>
                   </tr>
                 </thead>
                 <tbody>
                   {% for file in upload_file.all %}
                   <tr id="uploaded-file-{{ file.id }}">
                     <td>
-                      <a href="{{ file.file.url }}" class="text-decoration-none">
-                        {{ file.file }}
-                      </a>
+                      <a href="{{ file.file.url }}" class="text-decoration-none">{{ file.file }}</a>
                     </td>
                     <td class=" text-center">
                       <a class="btn btn-danger btn-sm" onclick="deleteFile('{{ file.id }}', '{{ file.file }}')">
@@ -60,9 +56,7 @@
                           value="{{ assignment_status.assignment.id }}">
                         <input type="file" name="file-for-upload" id="upload-file" style="display: none;"
                           onchange="formSubmit()">
-                        <label for="upload-file" class="fw-bold fs-5" id="label-upload">
-                          +
-                        </label>
+                        <label for="upload-file" class="fw-bold fs-5" id="label-upload">+</label>
                       </form>
                       <div id="spinner" class="spinner-border text-primary d-none" role="status">
                         <span class="sr-only"></span>
@@ -75,9 +69,7 @@
               <div class="form-floating mb-3">
                 <textarea class="form-control" id="edit-memo" name="memo" style="height: 100px; resize: none"
                   placeholder="Memo">{{ assignment_status.memo }}</textarea>
-                <label for="edit-memo">
-                  Memo
-                </label>
+                <label for="edit-memo">Memo</label>
               </div>
               <!-- EDIT BUTTON -->
               <div class="text-center mt-3">

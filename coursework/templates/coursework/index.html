@@ -18,24 +18,12 @@
 <table class="table table-dark table-striped table-hover table-borderless">
   <thead>
     <tr>
-      <th scope="col">
-        Course
-      </th>
-      <th scope="col">
-        Assignment
-      </th>
-      <th scope="col">
-        Created
-      </th>
-      <th scope="col">
-        Deadline
-      </th>
-      <th scope="col" class="text-center">
-        Status
-      </th>
-      <th scope="col" class="text-center">
-        Action
-      </th>
+      <th scope="col">Course</th>
+      <th scope="col">Assignment</th>
+      <th scope="col">Created</th>
+      <th scope="col">Deadline</th>
+      <th scope="col" class="text-center">Status</th>
+      <th scope="col" class="text-center">Action</th>
     </tr>
   </thead>
   <tbody>
@@ -52,13 +40,9 @@
       </td>
       <td class="text-center">
         {% if assignment.is_expired %}
-        <div class="text-danger fw-bold">
-          Expired
-        </div>
+        <div class="text-danger fw-bold">Expired</div>
         {% else %}
-        <div class="text-success fw-bold">
-          Active
-        </div>
+        <div class="text-success fw-bold">Active</div>
         {% endif %}
       </td>
       <td class="text-center">
@@ -73,9 +57,7 @@
           {% csrf_token %}
           <input type="hidden" name="assignment-id" value="{{ assignment.id }}">
           <input type="hidden" name="coursework-id" value="{{ assignment.coursework.id }}">
-          <button type="submit" class="btn btn-success btn-sm fw-bold">
-            Result
-          </button>
+          <button type="submit" class="btn btn-success btn-sm fw-bold">Result</button>
         </form>
         {% endif %}
         {% else %}
@@ -88,9 +70,7 @@
     </tr>
     {% empty %}
     <tr>
-      <td colspan="6">
-        No assignment at the moment...
-      </td>
+      <td colspan="6">No assignment at the moment...</td>
     </tr>
     {% endfor %}
   </tbody>

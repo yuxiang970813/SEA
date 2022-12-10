@@ -25,25 +25,15 @@
               {% csrf_token %}
               <!-- COURSE NAME -->
               <select class="form-select my-3 py-2" name="course-id" aria-label="Default select example">
-                <option selected disabled>
-                  Choose...
-                </option>
+                <option selected disabled>Choose...</option>
                 {% for course in courses %}
-                <option value="{{ course.id }}">
-                  {{ course }}
-                </option>
+                <option value="{{ course.id }}">{{ course }}</option>
                 {% empty %}
-                <option disabled>
-                  No course available
-                </option>
+                <option disabled>No course available</option>
                 {% endfor %}
               </select>
               <!-- CREATE BUTTON -->
-              <div class="text-center mt-3">
-                <button class="btn btn-secondary">
-                  Create Coursework
-                </button>
-              </div>
+              <div class="text-center mt-3"><button class="btn btn-secondary">Create Coursework</button></div>
             </form>
           </div>
         </div>

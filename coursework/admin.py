@@ -4,8 +4,13 @@ from .models import StudentList, User, Course, Coursework, Assignment, Assignmen
 
 class UserDisplay(admin.ModelAdmin):
     list_display = (
-        "username", "email", "last_name", "first_name", "status", "is_staff", "is_email_verified"
-    )
+        "username",
+        "email",
+        "last_name",
+        "first_name",
+        "status",
+        "is_staff",
+        "is_email_verified")
 
 
 class StudentListAdmin(admin.ModelAdmin):
