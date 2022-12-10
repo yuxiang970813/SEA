@@ -1,8 +1,8 @@
-{% extends "coursework/layout.html" %}
+{%extends "coursework/layout.html"%}
 
-{% block title %}Manage Upload File{% endblock %}
+{%block title%}Manage Upload File{%endblock%}
 
-{% block body %}
+{%block body%}
 <section>
   <div class="container mt-5 pt-5">
     <div class="row">
@@ -24,7 +24,7 @@
             <!-- ASSIGNMENT -->
             <div class="mb-3">
               <label for="disabledTextInput" class="form-label"></label>
-              <input type="text" id="disabledTextInput" class="form-control" value="{{ assignment_status.assignment }}"
+              <input type="text" id="disabledTextInput" class="form-control" value="{{assignment_status.assignment}}"
                 disabled>
             </div>
             <!-- UPLOADED FILE(S) -->
@@ -36,24 +36,19 @@
                   </tr>
                 </thead>
                 <tbody>
-                  {% for file in upload_file.all %}
-                  <tr id="uploaded-file-{{ file.id }}">
-                    <td>
-                      <a href="{{ file.file.url }}" class="text-decoration-none">{{ file.file }}</a>
-                    </td>
-                    <td class=" text-center">
-                      <a class="btn btn-danger btn-sm" onclick="deleteFile('{{ file.id }}', '{{ file.file }}')">
-                        Delete
-                      </a>
-                    </td>
+                  {%for file in upload_file.all%}
+                  <tr id="uploaded-file-{{file.id}}">
+                    <td><a href="{{file.file.url}}" class="text-decoration-none">{{file.file}}</a></td>
+                    <td class=" text-center"><a class="btn btn-danger btn-sm"
+                        onclick="deleteFile('{{file.id}}', '{{file.file}}')">Delete</a></td>
                   </tr>
-                  {% endfor %}
+                  {%endfor%}
                   <tr>
                     <td colspan="2" class="text-center">
                       <form method="post" enctype="multipart/form-data">
-                        <input type="hidden" name="student-id" id="student-id" value="{{ user.id }}">
+                        <input type="hidden" name="student-id" id="student-id" value="{{user.id}}">
                         <input type="hidden" name="assignment-id" id="assignment-id"
-                          value="{{ assignment_status.assignment.id }}">
+                          value="{{assignment_status.assignment.id}}">
                         <input type="file" name="file-for-upload" id="upload-file" style="display: none;"
                           onchange="formSubmit()">
                         <label for="upload-file" class="fw-bold fs-5" id="label-upload">+</label>
@@ -68,14 +63,12 @@
               <!-- MEMO -->
               <div class="form-floating mb-3">
                 <textarea class="form-control" id="edit-memo" name="memo" style="height: 100px; resize: none"
-                  placeholder="Memo">{{ assignment_status.memo }}</textarea>
+                  placeholder="Memo">{{assignment_status.memo}}</textarea>
                 <label for="edit-memo">Memo</label>
               </div>
               <!-- EDIT BUTTON -->
               <div class="text-center mt-3">
-                <button class="btn btn-secondary" onclick="editMemo('{{ assignment_status.id }}')">
-                  Save
-                </button>
+                <button class="btn btn-secondary" onclick="editMemo('{{assignment_status.id}}')">Save</button>
               </div>
             </div>
           </div>
@@ -83,6 +76,5 @@
       </div>
     </div>
   </div>
-  </div>
 </section>
-{% endblock %}
+{%endblock%}

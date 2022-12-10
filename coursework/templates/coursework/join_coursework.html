@@ -1,8 +1,8 @@
-{% extends "coursework/layout.html" %}
+{%extends "coursework/layout.html"%}
 
-{% block title%}Join Coursework{% endblock %}
+{%block title%}Join Coursework{%endblock%}
 
-{% block body %}
+{%block body%}
 <section>
   <div class="container mt-5 pt-5">
     <div class="row">
@@ -21,16 +21,16 @@
                   d="M1 5v-.5a.5.5 0 0 1 1 0V5h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1H1zm0 3v-.5a.5.5 0 0 1 1 0V8h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1H1zm0 3v-.5a.5.5 0 0 1 1 0v.5h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1H1z" />
               </svg>
             </div>
-            <form action="{% url 'join_coursework' %}" method="post">
-              {% csrf_token %}
+            <form action="{%url 'join_coursework'%}" method="post">
+              {%csrf_token%}
               <!-- COURSEWORK NAME -->
               <select class="form-select my-3 py-2" name="coursework-id" aria-label="Default select example">
                 <option selected disabled>Choose...</option>
-                {% for coursework in courseworks %}
-                <option value="{{ coursework.id }}">{{ coursework }}</option>
-                {% empty %}
+                {%for coursework in courseworks%}
+                <option value="{{coursework.id}}">{{coursework}}</option>
+                {%empty%}
                 <option disabled>No coursework available...</option>
-                {% endfor %}
+                {%endfor%}
               </select>
               <!-- CREATE BUTTON -->
               <div class="text-center mt-3"><button class="btn btn-secondary">Join Coursework</button></div>
@@ -41,4 +41,4 @@
     </div>
   </div>
 </section>
-{% endblock %}
+{%endblock%}

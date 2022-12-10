@@ -1,8 +1,8 @@
-{% extends "coursework/layout.html" %}
+{%extends "coursework/layout.html"%}
 
-{% block title %}Assignment Result{% endblock %}
+{%block title%}Assignment Result{%endblock%}
 
-{% block body %}
+{%block body%}
 <!-- TITLE -->
 <h1>
   <!-- LOGO -->
@@ -16,7 +16,7 @@
       d="M1 5v-.5a.5.5 0 0 1 1 0V5h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1H1zm0 3v-.5a.5.5 0 0 1 1 0V8h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1H1zm0 3v-.5a.5.5 0 0 1 1 0v.5h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1H1z" />
   </svg>
   <!-- ASSIGNMENT NAME -->
-  {{ assignments.title }}
+  {{assignments.title}}
 </h1>
 <!-- CONTENT -->
 <div class="accordion" id="accordionExample">
@@ -24,9 +24,7 @@
   <div class="accordion-item">
     <h2 class="accordion-header" id="headingOne">
       <button class="accordion-button fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne"
-        aria-expanded="true" aria-controls="collapseOne">
-        Summary
-      </button>
+        aria-expanded="true" aria-controls="collapseOne">Summary</button>
     </h2>
     <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne"
       data-bs-parent="#accordionExample">
@@ -41,11 +39,11 @@
             </tr>
           </thead>
           <tbody>
-            {% for student in coursework.taken_person.all %}
+            {%for student in coursework.taken_person.all%}
             <tr>
-              <td>{{ student.last_name }}{{ student.first_name }}({{ student }})</td>
+              <td>{{student.last_name}}{{student.first_name}}({{student}})</td>
               <td class="text-center">
-                {% if student in student_who_submit_memo or student in student_who_upload_file %}
+                {%if student in student_who_submit_memo or student in student_who_upload_file%}
                 <div class="text-success fw-bold">
                   <!-- True -->
                   <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
@@ -54,7 +52,7 @@
                       d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z" />
                   </svg>
                 </div>
-                {% else %}
+                {%else%}
                 <div class="text-danger fw-bold">
                   <!-- False -->
                   <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
@@ -63,10 +61,10 @@
                       d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM5.354 4.646a.5.5 0 1 0-.708.708L7.293 8l-2.647 2.646a.5.5 0 0 0 .708.708L8 8.707l2.646 2.647a.5.5 0 0 0 .708-.708L8.707 8l2.647-2.646a.5.5 0 0 0-.708-.708L8 7.293 5.354 4.646z" />
                   </svg>
                 </div>
-                {% endif %}
+                {%endif%}
               </td>
               <td class="text-center">
-                {% if student in student_who_submit_memo %}
+                {%if student in student_who_submit_memo%}
                 <div class="text-success fw-bold">
                   <!-- True -->
                   <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
@@ -75,7 +73,7 @@
                       d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z" />
                   </svg>
                 </div>
-                {% else %}
+                {%else%}
                 <div class="text-danger fw-bold">
                   <!-- False -->
                   <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
@@ -84,10 +82,10 @@
                       d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM5.354 4.646a.5.5 0 1 0-.708.708L7.293 8l-2.647 2.646a.5.5 0 0 0 .708.708L8 8.707l2.646 2.647a.5.5 0 0 0 .708-.708L8.707 8l2.647-2.646a.5.5 0 0 0-.708-.708L8 7.293 5.354 4.646z" />
                   </svg>
                 </div>
-                {% endif %}
+                {%endif%}
               </td>
               <td class="text-center">
-                {% if student in student_who_upload_file %}
+                {%if student in student_who_upload_file%}
                 <div class="text-success fw-bold">
                   <!-- True -->
                   <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
@@ -96,7 +94,7 @@
                       d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z" />
                   </svg>
                 </div>
-                {% else %}
+                {%else%}
                 <div class="text-danger fw-bold">
                   <!-- False -->
                   <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
@@ -105,16 +103,14 @@
                       d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM5.354 4.646a.5.5 0 1 0-.708.708L7.293 8l-2.647 2.646a.5.5 0 0 0 .708.708L8 8.707l2.646 2.647a.5.5 0 0 0 .708-.708L8.707 8l2.647-2.646a.5.5 0 0 0-.708-.708L8 7.293 5.354 4.646z" />
                   </svg>
                 </div>
-                {% endif %}
+                {%endif%}
               </td>
             </tr>
-            {% empty %}
+            {%empty%}
             <tr>
-              <td colspan="4">
-                No data at the moment...
-              </td>
+              <td colspan="4">No data at the moment...</td>
             </tr>
-            {% endfor %}
+            {%endfor%}
           </tbody>
         </table>
       </div>
@@ -124,28 +120,25 @@
   <div class="accordion-item">
     <h2 class="accordion-header" id="headingTwo">
       <button class="accordion-button collapsed fw-bold" type="button" data-bs-toggle="collapse"
-        data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-        Memo
-      </button>
+        data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">Memo</button>
     </h2>
     <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo"
       data-bs-parent="#accordionExample">
       <div class="accordion-body">
         <ul class="list-group">
-          {% for submited_memo in assignment_status %}
-          {% if submited_memo.memo %}
+          {%for submited_memo in assignment_status%}
+          {%if submited_memo.memo%}
           <li class="list-group-item d-flex justify-content-between align-items-start">
             <div class="ms-2 me-auto">
               <div class="fw-bold">
-                {{ submited_memo.student.last_name }}{{ submited_memo.student.first_name }}({{ submited_memo.student }})
-              </div>
-              {{ submited_memo.memo }}
+                {{submited_memo.student.last_name}}{{submited_memo.student.first_name}}({{submited_memo.student}})</div>
+              {{submited_memo.memo}}
             </div>
           </li>
-          {% endif %}
-          {% empty %}
+          {%endif%}
+          {%empty%}
           No memo available...
-          {% endfor %}
+          {%endfor%}
         </ul>
       </div>
     </div>
@@ -154,43 +147,40 @@
   <div class="accordion-item">
     <h2 class="accordion-header" id="headingThree">
       <button class="accordion-button collapsed fw-bold" type="button" data-bs-toggle="collapse"
-        data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
-        Uploaded Files
-      </button>
+        data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">Uploaded Files</button>
     </h2>
     <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree"
       data-bs-parent="#accordionExample">
       <div class="accordion-body">
-        {% for submitted_file in assignment_status %}
-        {% if submitted_file.upload_file.all %}
+        {%for submitted_file in assignment_status%}
+        {%if submitted_file.upload_file.all%}
         <ul class="list-group">
           <li class="list-group-item list-group-item-dark fw-bold">
-            {{ submitted_file.student.last_name }}{{ submitted_file.student.first_name }}({{ submitted_file.student }})
-          </li>
-          {% for file in submitted_file.upload_file.all %}
+            {{submitted_file.student.last_name}}{{submitted_file.student.first_name}}({{submitted_file.student}})</li>
+          {%for file in submitted_file.upload_file.all%}
           <li class="list-group-item overflow-auto" style="word-break: break-word">
-            {% if ".wav" in file.file.name %}
+            {%if ".wav" in file.file.name%}
             <audio controls>
-              <source src="{{ file.file.url }}" type="audio/wav">
+              <source src="{{file.file.url}}" type="audio/wav">
             </audio>
-            {% else %}
-            <a href="{{ file.file.url }}" class="text-decoration-none">{{ file.file }}</a>
-            {% endif %}
+            {%else%}
+            <a href="{{file.file.url}}" class="text-decoration-none">{{file.file}}</a>
+            {%endif%}
           </li>
-          {% endfor %}
+          {%endfor%}
         </ul>
         <hr>
-        {% endif %}
-        {% empty %}
+        {%endif%}
+        {%empty%}
         No uploaded file available...
-        {% endfor %}
-        {% if assignments.result_zip_file %}
+        {%endfor%}
+        {%if assignments.result_zip_file%}
         <div class="text-center">
-          <a href="{{ assignments.result_zip_file.url }}" class="btn btn-secondary">Download all session files</a>
+          <a href="{{assignments.result_zip_file.url}}" class="btn btn-secondary">Download all session files</a>
         </div>
-        {% endif %}
+        {%endif%}
       </div>
     </div>
   </div>
 </div>
-{% endblock %}
+{%endblock%}

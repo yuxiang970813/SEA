@@ -1,8 +1,8 @@
-{% extends "coursework/layout.html" %}
+{%extends "coursework/layout.html"%}
 
-{% block title %}{{ coursework }}{% endblock %}
+{%block title%}{{coursework}}{%endblock%}
 
-{% block body %}
+{%block body%}
 <h1>
   <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" fill="currentColor" class="bi bi-journals"
     viewBox="0 0 16 16">
@@ -11,7 +11,7 @@
     <path
       d="M1 6v-.5a.5.5 0 0 1 1 0V6h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1H1zm0 3v-.5a.5.5 0 0 1 1 0V9h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1H1zm0 2.5v.5H.5a.5.5 0 0 0 0 1h2a.5.5 0 0 0 0-1H2v-.5a.5.5 0 0 0-1 0z" />
   </svg>
-  {{ coursework }}
+  {{coursework}}
 </h1>
 <table class="table table-dark table-striped table-hover table-borderless">
   <thead>
@@ -24,54 +24,50 @@
     </tr>
   </thead>
   <tbody>
-    {% for assignment in coursework.assignment.all %}
+    {%for assignment in coursework.assignment.all%}
     <tr>
-      <td>{{ assignment }}</td>
-      <td>{{ assignment.created_on|date:'n/d D' }}</td>
-      <td>{{ assignment.deadline|date:'n/d D G:i' }}</td>
+      <td>{{assignment}}</td>
+      <td>{{assignment.created_on|date:'n/d D'}}</td>
+      <td>{{assignment.deadline|date:'n/d D G:i'}}</td>
       <td class="text-center">
-        {% if assignment.is_expired %}
+        {%if assignment.is_expired%}
         <div class="text-danger fw-bold">Expired</div>
-        {% else %}
+        {%else%}
         <div class="text-success fw-bold">Active</div>
-        {% endif %}
+        {%endif%}
       </td>
       <td class="text-center">
-        {% if assignment.is_expired %}
-        {% if user.status == "Student" %}
-        <a href="{% url 'view_submit_result' assignment.coursework.id assignment.id %}"
-          class="btn btn-success btn-sm fw-bold">
-          View
-        </a>
-        {% else %}
-        <form action="{% url 'assignment_result' %}" method="post">
-          {% csrf_token %}
-          <input type="hidden" name="assignment-id" value="{{ assignment.id }}">
+        {%if assignment.is_expired%}
+        {%if user.status == "Student"%}
+        <a href="{%url 'view_submit_result' assignment.coursework.id assignment.id%}"
+          class="btn btn-success btn-sm fw-bold">View</a>
+        {%else%}
+        <form action="{%url 'assignment_result'%}" method="post">
+          {%csrf_token%}
+          <input type="hidden" name="assignment-id" value="{{assignment.id}}">
           <button type="submit" class="btn btn-success btn-sm fw-bold">Result</button>
         </form>
-        {% endif %}
-        {% else %}
-        <a href="{% url 'submit_assignment' assignment.coursework.id assignment.id %}"
-          class="btn btn-primary btn-sm fw-bold">
-          Submit
-        </a>
-        {% endif %}
+        {%endif%}
+        {%else%}
+        <a href="{%url 'submit_assignment' assignment.coursework.id assignment.id%}"
+          class="btn btn-primary btn-sm fw-bold">Submit</a>
+        {%endif%}
       </td>
     </tr>
-    {% empty %}
+    {%empty%}
     <tr>
       <td colspan="5">No assignment at the moment...</td>
     </tr>
-    {% endfor %}
+    {%endfor%}
     <tr>
       <td colspan="5" style="text-align:center">
-        {% if not user.status == "Student" %}
-        <a href="{% url 'create_assignment' coursework.id %}">Create assignment</a>
-        {% else %}
+        {%if not user.status == "Student"%}
+        <a href="{%url 'create_assignment' coursework.id%}">Create assignment</a>
+        {%else%}
         Bla bla bla
-        {% endif %}
+        {%endif%}
       </td>
     </tr>
   </tbody>
 </table>
-{% endblock %}
+{%endblock%}

@@ -1,33 +1,33 @@
-{% if messages %}
-{% for message in messages %}
-{% if message.tags == "success" %}
+{%if messages%}
+{%for message in messages%}
+{%if message.tags == "success"%}
 <div class="alert alert-success alert-dismissible fade show" role="alert">
   <!-- SUCCESS MESSAGE -->
-  {{ message|safe }}
+  {{message|safe}}
   <!-- CLOSE BUTTON -->
   <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
 </div>
-{% elif message.tags == "info" %}
+{%elif message.tags == "info"%}
 <div class="alert alert-info alert-dismissible fade show" role="alert">
   <!-- INFO MESSAGE -->
-  {{ message|safe }}
+  {{message|safe}}
   <!-- CLOSE BUTTON -->
   <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
 </div>
-{% elif message.tags == "warning" %}
+{%elif message.tags == "warning"%}
 <div class="alert alert-warning alert-dismissible fade show" role="alert">
   <!-- WARNING MESSAGE -->
-  {{ message|safe }}
+  {{message|safe}}
   <!-- CLOSE BUTTON -->
   <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
 </div>
-{% elif message.tags == "error" %}
+{%elif message.tags == "error"%}
 <div class="alert alert-danger alert-dismissible fade show" role="alert">
   <!-- ERROR MESSAGE -->
-  {{ message|safe }}
+  {{message|safe}}
   <!-- CLOSE BUTTON -->
   <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
 </div>
-{% endif %}
-{% endfor %}
-{% endif %}
+{%endif%}
+{%endfor%}
+{%endif%}

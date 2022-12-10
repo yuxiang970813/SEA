@@ -25,8 +25,8 @@ import os
 
 @login_required
 def index(request):
-    return render(request, "coursework/index.html", {
-        "assignments": Assignment.objects.filter(coursework__taken_person=request.user)})
+    # Return all coursework assignments that user has joined in
+    return render(request, "coursework/index.html", {"assignments": Assignment.objects.filter(coursework__taken_person=request.user)})
 
 
 class EmailThread(threading.Thread):
@@ -63,9 +63,10 @@ def activate_user(request, uidb64, token):
         user = None
     # User exist & token match
     if user and generate_token.check_token(user, token):
-        # Make email verified, info and redirect user to login page
+        # Make email verified
         user.is_email_verified = True
         user.save()
+        # Info and redirect user to login page
         messages.success(request, "Email verified, you can now login!")
         return HttpResponseRedirect(reverse("login"))
     # User doesn't exist or token doen't match
@@ -86,9 +87,7 @@ def login_view(request):
             password=request.POST["password"])
         # Invalid user
         if user is None:
-            messages.error(
-                request,
-                "Invalid student number and/or password.")
+            messages.error(request, "Invalid student number and/or password.")
             return HttpResponseRedirect(reverse("login"))
         # Valid user
         else:
@@ -112,7 +111,7 @@ def login_view(request):
 @login_required
 def logout_view(request):
     logout(request)
-    messages.success(request, "Logged out successfully!")
+    messages.info(request, "You have logged out!")
     return HttpResponseRedirect(reverse("login"))
 
 
@@ -145,14 +144,10 @@ def register(request):
             user.save()
         # Error if username already taken
         except IntegrityError:
-            messages.error(
-                request,
-                "Student id already taken!")
+            messages.error(request, "Student id already taken!")
             return HttpResponseRedirect(reverse("register"))
         # Redirect to login page after register successfully
-        messages.success(
-            request,
-            "Account created successfully!")
+        messages.success(request, "Account created successfully!")
         return HttpResponseRedirect(reverse("login"))
     # User access register page
     else:
@@ -182,11 +177,10 @@ def create_coursework(request):
                 return HttpResponseRedirect(reverse("create_coursework"))
         # Teacher access create coursework page
         else:
-            return render(request, "coursework/create_coursework.html", {
-                "courses": Course.objects.all()})
+            return render(request, "coursework/create_coursework.html", {"courses": Course.objects.all()})
     # Redirect non-teacher person to index
     else:
-        messages.error(request, "Only teacher can create coursework!")
+        messages.warning(request, "Only teacher can create coursework!")
         return HttpResponseRedirect(reverse("index"))
 
 
@@ -223,8 +217,7 @@ def join_coursework(request):
             return HttpResponseRedirect(reverse("index"))
     # User access join coursework page
     else:
-        return render(request, "coursework/join_coursework.html", {
-            "courseworks": Coursework.objects.all()})
+        return render(request, "coursework/join_coursework.html", {"courseworks": Coursework.objects.all()})
 
 
 @login_required
@@ -256,13 +249,10 @@ def request_coursework(request):
             return HttpResponseRedirect(reverse("request_coursework"))
         # User access approve request page
         else:
-            return render(request, "coursework/request_coursework.html", {
-                "coursework_requests": JoinCourseworkRequest.objects.all()})
+            return render(request, "coursework/request_coursework.html", {"coursework_requests": JoinCourseworkRequest.objects.all()})
     # Prevent student access
     else:
-        messages.warning(
-            request,
-            "You have not permission!")
+        messages.warning(request, "You have not permission!")
         return HttpResponseRedirect(reverse("index"))
 
 
@@ -280,8 +270,7 @@ def coursework_view(request, coursework_id):
     coursework = Coursework.objects.get(pk=int(coursework_id))
     # Make sure user have join coursework
     if request.user in coursework.taken_person.all():
-        return render(request, "coursework/coursework_view.html", {
-            "coursework": coursework})
+        return render(request, "coursework/coursework_view.html", {"coursework": coursework})
     # Remind & redirect to index if user haven't join coursework
     else:
         messages.error(request, "You haven't join this coursework!")
@@ -312,8 +301,7 @@ def create_assignment(request, coursework_id):
             return HttpResponseRedirect(reverse("coursework_view", args=(coursework_id,)))
         # User access create assignment page
         else:
-            return render(request, "coursework/create_assignment.html", {
-                "coursework": Coursework.objects.get(pk=int(coursework_id))})
+            return render(request, "coursework/create_assignment.html", {"coursework": Coursework.objects.get(pk=int(coursework_id))})
 
 
 def user_in_coursework(user, coursework_id, assignment):
@@ -460,9 +448,7 @@ def create_zip_file(assignment):
     # Add that zip file to assignment
     path = Path(zip_file_name)
     with path.open(mode="rb") as result_zip_file:
-        assignment.result_zip_file = File(
-            result_zip_file,
-            name=path.name)
+        assignment.result_zip_file = File(result_zip_file, name=path.name)
         assignment.save()
     # Delete zip file after add to assignment
     os.remove(zip_file_name)

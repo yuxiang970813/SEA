@@ -1,8 +1,8 @@
-{% extends "coursework/layout.html" %}
+{%extends "coursework/layout.html"%}
 
-{% block title %}Coursework Request{% endblock %}
+{%block title%}Coursework Request{%endblock%}
 
-{% block body %}
+{%block body%}
 <!-- TITLE -->
 <h1>
   <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" fill="currentColor" class="bi bi-card-checklist"
@@ -24,31 +24,28 @@
     </tr>
   </thead>
   <tbody>
-    {% for coursework_request in coursework_requests %}
+    {%for coursework_request in coursework_requests%}
     <tr>
       <td>
-        {{ coursework_request.student.last_name }}{{ coursework_request.student.first_name }}
-        ({{ coursework_request.student }})
+        {{coursework_request.student.last_name}}{{coursework_request.student.first_name}}({{coursework_request.student}})
       </td>
-      <td>{{ coursework_request.coursework }}</td>
+      <td>{{coursework_request.coursework}}</td>
       <td class="text-center">
-        <form action="{% url 'request_coursework' %}" method="post">
-          {% csrf_token %}
-          <input type="hidden" name="request-id" value="{{ coursework_request.id }}">
-          <button type="submit" class="btn btn-success btn-sm fw-bold" name="request-action" value="Accept">
-            Accept
-          </button>
-          <button type="submit" class="btn btn-danger btn-sm fw-bold" name="request-action" value="Decline">
-            Decline
-          </button>
+        <form action="{%url 'request_coursework'%}" method="post">
+          {%csrf_token%}
+          <input type="hidden" name="request-id" value="{{coursework_request.id}}">
+          <button type="submit" class="btn btn-success btn-sm fw-bold" name="request-action"
+            value="Accept">Accept</button>
+          <button type="submit" class="btn btn-danger btn-sm fw-bold" name="request-action"
+            value="Decline">Decline</button>
         </form>
       </td>
     </tr>
-    {% empty %}
+    {%empty%}
     <tr>
       <td colspan="3">No request at the moment...</td>
     </tr>
-    {% endfor %}
+    {%endfor%}
   </tbody>
 </table>
-{% endblock %}
+{%endblock%}

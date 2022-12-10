@@ -2,7 +2,7 @@ function deleteFile(file_id, filename) {
     // Make sure user really want delete file
     const result = confirm(`Are you sure want to delete ${filename}?`);
     if (result === true) {
-        // Request delete file api
+        // Request delete file API
         fetch('/delete/file', {
             method: 'POST',
             body: JSON.stringify({
@@ -11,11 +11,13 @@ function deleteFile(file_id, filename) {
         })
             .then((response) => response.json())
             .then((result) => {
+                // Alert error if error
                 if (result.error) {
                     alert(result.error);
-                } else if (result.message) {
+                }
+                // Alert message & remove file row if success
+                else if (result.message) {
                     alert(result.message);
-                    // Remove file row
                     document
                         .getElementById(`uploaded-file-${file_id}`)
                         .remove();
@@ -25,9 +27,9 @@ function deleteFile(file_id, filename) {
 }
 
 function editMemo(assignmentStatusId) {
-    // Search for the memo textarea
+    // Search for the memo value
     const newMemo = document.getElementById('edit-memo').value;
-    // Request edit memo api
+    // Request edit memo API
     fetch('/edit/memo', {
         method: 'POST',
         body: JSON.stringify({
@@ -37,9 +39,12 @@ function editMemo(assignmentStatusId) {
     })
         .then((response) => response.json())
         .then((result) => {
+            // Alert error if error
             if (result.error) {
                 alert(result.error);
-            } else if (result.message) {
+            }
+            // Alert message & redirect to index if success
+            else if (result.message) {
                 alert(result.message);
                 location.replace('/');
             }
@@ -53,7 +58,7 @@ function formSubmit() {
     // Hide add button & show spinner
     addButton.classList.add('d-none');
     spinner.classList.remove('d-none');
-    // Create form and add data in it
+    // Create and fill in form
     const formData = new FormData();
     formData.append('studentId', document.getElementById('student-id').value);
     formData.append(
@@ -61,7 +66,7 @@ function formSubmit() {
         document.getElementById('assignment-id').value
     );
     formData.append('file', document.getElementById('upload-file').files[0]);
-    // Request upload file
+    // Request upload file API
     fetch('/upload/file', {
         method: 'POST',
         body: formData,
@@ -80,10 +85,6 @@ function formSubmit() {
             // Refresh page
             location.reload();
         });
-}
-
-function declineRequest(courseworkRequestId) {
-    console.log(`Decline ${courseworkRequestId}`);
 }
 
 document.addEventListener('DOMContentLoaded', () => {

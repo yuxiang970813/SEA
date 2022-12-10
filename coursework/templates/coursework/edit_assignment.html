@@ -1,8 +1,8 @@
-{% extends "coursework/layout.html" %}
+{%extends "coursework/layout.html"%}
 
-{% block title %}Edit Memo{% endblock %}
+{%block title%}Edit Memo{%endblock%}
 
-{% block body %}
+{%block body%}
 <section>
   <div class="container mt-5 pt-5">
     <div class="row">
@@ -22,18 +22,18 @@
               </svg>
             </div>
             <form method="post"
-              action="{% url 'edit_memo' assignment_status.assignment.coursework.id assignment_status.assignment.id %}">
-              {% csrf_token %}
+              action="{%url 'edit_memo' assignment_status.assignment.coursework.id assignment_status.assignment.id%}">
+              {%csrf_token%}
               <!-- ASSIGNMENT -->
               <div class="mb-3">
                 <label for="disabledTextInput" class="form-label"></label>
-                <input type="text" id="disabledTextInput" class="form-control"
-                  value="{{ assignment_status.assignment }}" disabled>
+                <input type="text" id="disabledTextInput" class="form-control" value="{{assignment_status.assignment}}"
+                  disabled>
               </div>
               <!-- MEMO -->
               <div class="form-floating mb-3">
                 <textarea class="form-control" id="floatingTextarea2" name="memo" style="height: 100px; resize: none"
-                  placeholder="Memo" autofocus>{{ assignment_status.memo }}</textarea>
+                  placeholder="Memo" autofocus>{{assignment_status.memo}}</textarea>
                 <label for="floatingTextarea2">Memo</label>
               </div>
               <!-- EDIT BUTTON -->
@@ -45,4 +45,4 @@
     </div>
   </div>
 </section>
-{% endblock %}
+{%endblock%}

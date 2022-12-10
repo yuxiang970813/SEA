@@ -1,15 +1,15 @@
-{% extends "coursework/layout.html" %}
+{%extends "coursework/layout.html"%}
 
-{% block title %}Manage Upload File{% endblock %}
+{%block title%}Manage Upload File{%endblock%}
 
-{% block body %}
+{%block body%}
 <section>
   <div class="container mt-5 pt-5">
     <div class="row">
       <div class="col-12 col-sm-8 col-md-6 m-auto">
         <div class="card border-0 shadow">
           <div class="card-body">
-            {% if not assignment_status %}
+            {%if not assignment_status%}
             <!-- ICON -->
             <div class="text-center">
               <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" fill="currentColor"
@@ -28,7 +28,7 @@
               <input type="text" id="disabledTextInput" class="form-control" value="You didn't submit this assignment!"
                 disabled>
             </div>
-            {% else %}
+            {%else%}
             <!-- ICON -->
             <div class="text-center">
               <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" fill="currentColor"
@@ -44,7 +44,7 @@
             <!-- ASSIGNMENT -->
             <div class="mb-3">
               <label for="disabledTextInput" class="form-label"></label>
-              <input type="text" id="disabledTextInput" class="form-control" value="{{ assignment_status.assignment }}"
+              <input type="text" id="disabledTextInput" class="form-control" value="{{assignment_status.assignment}}"
                 disabled>
             </div>
             <!-- UPLOADED FILE(S) -->
@@ -56,29 +56,29 @@
                   </tr>
                 </thead>
                 <tbody>
-                  {% for file in upload_file.all %}
-                  <tr id="uploaded-file-{{ file.id }}">
-                    <td><a href="{{ file.file.url }}" class="text-decoration-none">{{ file.file }}</a></td>
+                  {%for file in upload_file.all%}
+                  <tr id="uploaded-file-{{file.id}}">
+                    <td><a href="{{file.file.url}}" class="text-decoration-none">{{file.file}}</a></td>
                   </tr>
-                  {% empty %}
+                  {%empty%}
                   <tr>
                     <td>No uploaded file...</td>
                   </tr>
-                  {% endfor %}
+                  {%endfor%}
                 </tbody>
               </table>
               <!-- MEMO -->
               <div class="form-floating mb-3">
                 <textarea class="form-control" id="edit-memo" name="memo" style="height: 100px; resize: none"
-                  placeholder="Memo" disabled>{{ assignment_status.memo }}</textarea>
+                  placeholder="Memo" disabled>{{assignment_status.memo}}</textarea>
                 <label for="edit-memo">Memo</label>
               </div>
             </div>
-            {% endif %}
+            {%endif%}
           </div>
         </div>
       </div>
     </div>
   </div>
 </section>
-{% endblock %}
+{%endblock%}
