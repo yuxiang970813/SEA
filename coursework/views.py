@@ -375,11 +375,14 @@ def upload_file(request):
             assignment=Assignment.objects.get(pk=request.POST["assignmentId"]),
             student=User.objects.get(pk=request.POST["studentId"]))
         # Upload file if find status
-        UploadFile.objects.create(
-            assignment=assignment_status,
-            file=request.FILES["file"]
-        ).save()
-        return JsonResponse({"message": "Upload successfully!"}, status=201)
+        if not assignment_status.assignment.is_expired:
+            UploadFile.objects.create(
+                assignment=assignment_status,
+                file=request.FILES["file"]
+            ).save()
+            return JsonResponse({"message": "Upload successfully!"}, status=201)
+        else:
+            return JsonResponse({"error": "Assignment expired!"}, status=400)
     except AssignmentStatus.DoesNotExist:
         return JsonResponse({"error": "Something went wrong!"}, status=400)
 

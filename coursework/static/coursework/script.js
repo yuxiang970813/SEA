@@ -51,7 +51,7 @@ function editMemo(assignmentStatusId) {
         });
 }
 
-function formSubmit() {
+function uploadFile() {
     // For use later
     const addButton = document.getElementById('label-upload');
     const spinner = document.getElementById('spinner');
