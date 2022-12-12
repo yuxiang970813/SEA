@@ -1,5 +1,14 @@
 from django.contrib import admin
-from .models import StudentList, User, Course, Coursework, Assignment, AssignmentStatus, UploadFile, JoinCourseworkRequest
+from .models import (
+    StudentList,
+    User,
+    Course,
+    Coursework,
+    Assignment,
+    AssignmentStatus,
+    UploadFile,
+    JoinCourseworkRequest,
+)
 
 
 class UserDisplay(admin.ModelAdmin):
@@ -10,7 +19,8 @@ class UserDisplay(admin.ModelAdmin):
         "first_name",
         "status",
         "is_staff",
-        "is_email_verified")
+        "is_email_verified",
+    )
 
 
 class StudentListAdmin(admin.ModelAdmin):

@@ -76,10 +76,12 @@ function uploadFile() {
             // Show add button & hide spinner
             addButton.classList.remove('d-none');
             spinner.classList.add('d-none');
-            // Alert result
+            // Alert error if error
             if (result.error) {
                 alert(result.error);
-            } else if (result.message) {
+            }
+            // Alert message if success
+            else if (result.message) {
                 alert(result.message);
             }
             // Refresh page

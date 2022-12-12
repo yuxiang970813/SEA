@@ -9,13 +9,12 @@ SEA Coursework is a platform designed to improve the coursework experience for t
 Some of the key features of the platform include:
 
 -   Easy registration using a student ID
--   School email addresses verification to ensure that students are legitimate.
+-   School email addresses verification to ensure that students are legitimate
 -   Teacher can create coursework and assignments, each with its own deadline
 -   Students can upload their homework before the deadline
 -   A memo text area for students to write down their thoughts and notes on assignments
 -   Submission status is displayed after the deadline, allowing teacher to track student progress easily
-
-*   Teaching assistants have the authority to assist teachers by creating assignments, confirming or denying students' requests to join coursework, etc
+-   Teaching assistants have the authority to assist teachers by creating assignments, confirming or denying students' requests to join coursework, etc
 
 ## Technologies
 
