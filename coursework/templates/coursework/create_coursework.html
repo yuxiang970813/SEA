@@ -24,7 +24,7 @@
             <form action="{%url 'create_coursework'%}" method="post">
               {%csrf_token%}
               <!-- COURSE NAME -->
-              <select class="form-select my-3 py-2" name="course-id" aria-label="Default select example">
+              <select class="form-select my-3 py-2" name="course-id" aria-label="Default select example" required>
                 <option selected disabled>Choose...</option>
                 {%for course in courses%}
                 <option value="{{course.id}}">{{course}}</option>

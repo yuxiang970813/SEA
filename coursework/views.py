@@ -188,9 +188,12 @@ def create_coursework(request):
         if request.method == "POST":
             # Try create new coursework & add teacher to that coursework
             try:
-                new_coursework = Coursework.objects.create(
-                    course=Course.objects.get(pk=request.POST["course-id"])
-                )
+                try:
+                    course = Course.objects.get(pk=request.POST.get("course-id", False))
+                except Course.DoesNotExist:
+                    messages.error(request, "You didn't select any course!")
+                    return HttpResponseRedirect(reverse("create_coursework"))
+                new_coursework = Coursework.objects.create(course=course)
                 new_coursework.save()
                 new_coursework.taken_person.add(request.user)
                 # Redirect to index after create
@@ -224,7 +227,11 @@ def join_coursework(request):
     if request.method == "POST":
         # For user later
         user = request.user
-        coursework = Coursework.objects.get(pk=request.POST["coursework-id"])
+        try:
+            coursework = Coursework.objects.get(pk=request.POST["coursework-id"])
+        except:
+            messages.warning(request, "You didn't select any coursework!")
+            return HttpResponseRedirect(reverse("join_coursework"))
         taken_person = coursework.taken_person
         # Remind user if already join coursework
         if user in taken_person.all():
@@ -531,9 +538,13 @@ def create_zip_file(assignment):
                 zip_file.write(file)
     # Add that zip file to assignment
     path = Path(zip_file_name)
-    with path.open(mode="rb") as result_zip_file:
-        assignment.result_zip_file = File(result_zip_file, name=path.name)
+    os.chdir("../..")
+    with path.open(mode="rb") as result_zip:
+        print(path)
+        print(result_zip)
+        assignment.result_zip_file = File(result_zip, name=path.name)
         assignment.save()
+        print(assignment.result_zip_file)
     # Delete zip file after add to assignment
     os.remove(zip_file_name)
 
@@ -547,7 +558,7 @@ def assignment_result(request):
         assignment_status = AssignmentStatus.objects.filter(assignment=assignment)
         files = UploadFile.objects.filter(assignment__in=assignment_status)
         # Create result zip file if doesn't exist
-        if files and not assignment.result_zip_file:
+        if files and assignment.result_zip_file == "":
             create_zip_file(assignment)
         # Get the list of students who have submited the memo
         student_who_submit_memo = []

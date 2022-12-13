@@ -63,7 +63,7 @@
               <!-- MEMO -->
               <div class="form-floating mb-3">
                 <textarea class="form-control" id="edit-memo" name="memo" style="height: 100px; resize: none"
-                  placeholder="Memo">{{assignment_status.memo}}</textarea>
+                  placeholder="Memo">{%if assignment_status.memo is not None%}{{assignment_status.memo}}{%endif%}</textarea>
                 <label for="edit-memo">Memo</label>
               </div>
               <!-- EDIT BUTTON -->
