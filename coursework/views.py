@@ -56,6 +56,7 @@ class EmailThread(threading.Thread):
         self.email.send()
 
 
+# Reference: https://stackoverflow.com/questions/55005070/how-to-send-email-verification-link-in-django
 def send_activate_email(request, user):
     # Declare email content
     email = EmailMessage(
@@ -76,6 +77,7 @@ def send_activate_email(request, user):
     EmailThread(email).start()
 
 
+# Reference: https://stackoverflow.com/questions/55005070/how-to-send-email-verification-link-in-django
 def activate_user(request, uidb64, token):
     # Try decode user
     try:

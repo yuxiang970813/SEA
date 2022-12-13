@@ -1,3 +1,4 @@
+# Reference: https://stackoverflow.com/questions/55005070/how-to-send-email-verification-link-in-django
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
 import six
 

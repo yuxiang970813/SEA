@@ -89,6 +89,7 @@ function uploadFile() {
         });
 }
 
+// https://getbootstrap.com/docs/5.2/forms/validation/#custom-styles
 document.addEventListener('DOMContentLoaded', () => {
     // Bootstrap client side validation function
     (function () {
