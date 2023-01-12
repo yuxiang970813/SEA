@@ -50,7 +50,7 @@ class Coursework(models.Model):
     taken_person = models.ManyToManyField(
         User,
         blank=True,
-        related_name="coursework_taken",)
+        related_name="coursework_taken")
 
     def __str__(self):
         return self.course.name
