@@ -21,6 +21,7 @@ class User(AbstractUser):
         ("Student", "Student"),
         ("Teacher", "Teacher"),
         ("Teaching Assistant", "Teaching Assistant"))
+
     is_email_verified = models.BooleanField(default=False)
     status = models.CharField(
         choices=STATUS,
