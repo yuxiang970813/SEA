@@ -1,6 +1,7 @@
 function deleteFile(file_id, filename) {
     // Make sure user really want delete file
     const result = confirm(`Are you sure want to delete ${filename}?`);
+
     if (result === true) {
         // Request delete file API
         fetch('/delete/file', {
@@ -15,6 +16,7 @@ function deleteFile(file_id, filename) {
                 if (result.error) {
                     alert(result.error);
                 }
+
                 // Alert message & remove file row if success
                 else if (result.message) {
                     alert(result.message);
@@ -29,6 +31,7 @@ function deleteFile(file_id, filename) {
 function editMemo(assignmentStatusId) {
     // Search for the memo value
     const newMemo = document.getElementById('edit-memo').value;
+
     // Request edit memo API
     fetch('/edit/memo', {
         method: 'POST',
@@ -43,6 +46,7 @@ function editMemo(assignmentStatusId) {
             if (result.error) {
                 alert(result.error);
             }
+
             // Alert message & redirect to index if success
             else if (result.message) {
                 alert(result.message);
@@ -55,17 +59,21 @@ function uploadFile() {
     // For use later
     const addButton = document.getElementById('label-upload');
     const spinner = document.getElementById('spinner');
+
     // Hide add button & show spinner
     addButton.classList.add('d-none');
     spinner.classList.remove('d-none');
+
     // Create and fill in form
     const formData = new FormData();
+
     formData.append('studentId', document.getElementById('student-id').value);
     formData.append(
         'assignmentId',
         document.getElementById('assignment-id').value
     );
     formData.append('file', document.getElementById('upload-file').files[0]);
+
     // Request upload file API
     fetch('/upload/file', {
         method: 'POST',
@@ -76,14 +84,17 @@ function uploadFile() {
             // Show add button & hide spinner
             addButton.classList.remove('d-none');
             spinner.classList.add('d-none');
+
             // Alert error if error
             if (result.error) {
                 alert(result.error);
             }
+
             // Alert message if success
             else if (result.message) {
                 alert(result.message);
             }
+
             // Refresh page
             location.reload();
         });
@@ -96,6 +107,7 @@ document.addEventListener('DOMContentLoaded', () => {
         'use strict';
         // Fetch all the forms we want to apply custom Bootstrap validation styles to
         var forms = document.querySelectorAll('.needs-validation');
+
         // Loop over them and prevent submission
         Array.prototype.slice.call(forms).forEach(function (form) {
             form.addEventListener(

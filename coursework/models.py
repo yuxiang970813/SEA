@@ -5,9 +5,9 @@ import os
 
 
 class StudentList(models.Model):
-    student_id = models.IntegerField()
     first_name = models.CharField(max_length=18)
     last_name = models.CharField(max_length=18)
+    student_id = models.IntegerField()
 
     def __str__(self):
         return f"{self.last_name}{self.first_name}-{self.student_id}"
@@ -19,11 +19,13 @@ class StudentList(models.Model):
 class User(AbstractUser):
     STATUS = (
         ("Student", "Student"),
-        ("Teaching Assistant", "Teaching Assistant"),
         ("Teacher", "Teacher"),
-    )
-    status = models.CharField(max_length=18, choices=STATUS, default="Student")
+        ("Teaching Assistant", "Teaching Assistant"))
     is_email_verified = models.BooleanField(default=False)
+    status = models.CharField(
+        choices=STATUS,
+        default="Student",
+        max_length=18)
 
     class Meta:
         ordering = ["username"]
@@ -41,11 +43,14 @@ class Course(models.Model):
 
 class Coursework(models.Model):
     course = models.OneToOneField(
-        Course, on_delete=models.PROTECT, unique=True, related_name="coursework_name"
-    )
+        Course,
+        on_delete=models.PROTECT,
+        unique=True,
+        related_name="coursework_name")
     taken_person = models.ManyToManyField(
-        User, blank=True, related_name="coursework_taken"
-    )
+        User,
+        blank=True,
+        related_name="coursework_taken",)
 
     def __str__(self):
         return self.course.name
@@ -55,12 +60,14 @@ class Coursework(models.Model):
 
 
 class JoinCourseworkRequest(models.Model):
-    student = models.ForeignKey(
-        User, on_delete=models.CASCADE, related_name="request_student"
-    )
     coursework = models.ForeignKey(
-        Coursework, on_delete=models.CASCADE, related_name="request_coursework"
-    )
+        Coursework,
+        on_delete=models.CASCADE,
+        related_name="request_coursework")
+    student = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name="request_student")
 
     def __str__(self):
         return f"{self.student} request join {self.coursework}."
@@ -71,12 +78,13 @@ class JoinCourseworkRequest(models.Model):
 
 class Assignment(models.Model):
     coursework = models.ForeignKey(
-        Coursework, on_delete=models.PROTECT, related_name="assignment"
-    )
-    title = models.CharField(max_length=128)
+        Coursework,
+        on_delete=models.PROTECT,
+        related_name="assignment")
     created_on = models.DateTimeField(auto_now_add=True)
     deadline = models.DateTimeField()
     result_zip_file = models.FileField(null=True, blank=True)
+    title = models.CharField(max_length=128)
 
     def __str__(self):
         return self.title
@@ -95,11 +103,9 @@ class Assignment(models.Model):
 
 class AssignmentStatus(models.Model):
     assignment = models.ForeignKey(
-        Assignment, on_delete=models.PROTECT, related_name="status"
-    )
+        Assignment, on_delete=models.PROTECT, related_name="status")
     student = models.ForeignKey(
-        User, on_delete=models.PROTECT, related_name="assignment_student"
-    )
+        User, on_delete=models.PROTECT, related_name="assignment_student")
     memo = models.TextField(blank=True, null=True)
 
     def __str__(self):
@@ -112,18 +118,22 @@ class AssignmentStatus(models.Model):
 def path_and_rename(instance, filename):
     # For use later
     assign = instance.assignment
+
     # Return path and name
     return os.path.join(
         f"{assign.assignment.coursework}_{assign.assignment}_{assign.assignment.deadline.strftime('%Y%m%d')}",
-        f"{assign.student.username}.{filename.split('.')[-1]}",
-    )
+        f"{assign.student.username}.{filename.split('.')[-1]}")
 
 
 class UploadFile(models.Model):
     assignment = models.ForeignKey(
-        AssignmentStatus, on_delete=models.CASCADE, related_name="upload_file"
-    )
-    file = models.FileField(blank=True, null=True, upload_to=path_and_rename)
+        AssignmentStatus,
+        on_delete=models.CASCADE,
+        related_name="upload_file")
+    file = models.FileField(
+        blank=True,
+        null=True,
+        upload_to=path_and_rename)
 
     def __str__(self):
         return f"{self.assignment}({self.file})"

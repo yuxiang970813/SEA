@@ -1,14 +1,5 @@
+from .models import Assignment, AssignmentStatus, Course, Coursework, JoinCourseworkRequest, StudentList, UploadFile, User
 from django.contrib import admin
-from .models import (
-    StudentList,
-    User,
-    Course,
-    Coursework,
-    Assignment,
-    AssignmentStatus,
-    UploadFile,
-    JoinCourseworkRequest,
-)
 
 
 class UserDisplay(admin.ModelAdmin):
@@ -19,8 +10,7 @@ class UserDisplay(admin.ModelAdmin):
         "first_name",
         "status",
         "is_staff",
-        "is_email_verified",
-    )
+        "is_email_verified")
 
 
 class StudentListAdmin(admin.ModelAdmin):
@@ -41,11 +31,11 @@ class JoinCourseworkRequestAdmin(admin.ModelAdmin):
     list_display = ("student", "coursework")
 
 
-admin.site.register(StudentList, StudentListAdmin)
-admin.site.register(User, UserDisplay)
-admin.site.register(Course)
-admin.site.register(Coursework)
 admin.site.register(Assignment, AssignmentAdmin)
 admin.site.register(AssignmentStatus, AssignmentStatusAdmin)
-admin.site.register(UploadFile)
+admin.site.register(Course)
+admin.site.register(Coursework)
 admin.site.register(JoinCourseworkRequest, JoinCourseworkRequestAdmin)
+admin.site.register(StudentList, StudentListAdmin)
+admin.site.register(UploadFile)
+admin.site.register(User, UserDisplay)
