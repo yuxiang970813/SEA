@@ -16,6 +16,9 @@ Some of the key features of the platform include:
 -   Submission status is displayed after the deadline, allowing teacher to track student progress easily
 -   Teaching assistants have the authority to assist teachers by creating assignments, confirming or denying students' requests to join coursework, etc
 
+## Video Demo
+https://youtu.be/i5pFuwFf8ZA
+
 ## Technologies
 
 The project uses the following technologies:
