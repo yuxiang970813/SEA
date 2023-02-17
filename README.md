@@ -10,10 +10,12 @@ Some of the key features of the platform include:
 
 -   Easy registration using a student ID
 -   School email addresses verification to ensure that students are legitimate
--   Teacher can create coursework and assignments, each with its own deadline
--   Students can upload their homework before the deadline
+-   Teacher can create coursework and assignments, each with its own deadline, letting students upload their homework
+-   Upload function will close automatically after the deadline, eliminating the need for teachers or teaching assistants to close it manually
 -   A memo text area for students to write down their thoughts and notes on assignments
+-   Streamlines the grading process by automating tedious tasks such as automatically organising and renaming submitted files.
 -   Submission status is displayed after the deadline, allowing teacher to track student progress easily
+-   Automatically package all necessary files into a compressed file, teacher will be able to download the file by clicking the download button on the preview results page
 -   Teaching assistants have the authority to assist teachers by creating assignments, confirming or denying students' requests to join coursework, etc
 
 ## Video Demo
@@ -94,9 +96,3 @@ The `EMAIL_HOST_PASSWORD` is the password for the `EMAIL_FROM_USER` email accoun
 source .env-sample
 python manage.py runserver
 ```
-
-## Distinctiveness and Complexity
-
-As a former teaching assistant in this class, I had the unfortunate experience of dealing with a student who cheated by stealing another student's assignment and submitting it as their own. This incident occurred when we were using a cloud-based platform where students could see each other's uploaded files. It caused a lot of distress among the students who were affected. In response to this incident, I try to develop this web app, in which students can only see their own uploads when submitting assignments on the platform. This ensures that each student's work is kept private and that only the teacher and teaching assistants have the ability to preview all students' submissions.
-
-A deadline attribute is also implemented on the upload function to ensure that it closes automatically, eliminating the need for teachers or teaching assistants to close it manually. This platform also streamlines the grading process by automating tedious tasks such as automatically organising and renaming submitted files. This saves teaching assistants time and reduces the potential for errors. After the submission deadline, a results page will generate, allowing teachers and teaching assistants to easily view the status of each assignment, making it easy to manage and evaluate student work. Besides, the system will automatically package all necessary files into a compressed file, and the teacher will be able to download the file by clicking the download button on the preview results page.
